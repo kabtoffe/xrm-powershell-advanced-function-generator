@@ -1,4 +1,7 @@
-function Get-$EntityDisplayName {
+#Requires -modules Microsoft.Xrm.Data.PowerShell
+#Generated using https://github.com/kabtoffe/xrm-powershell-advanced-function-generator
+
+function Get-$Prefix$EntityDisplayName {
     [CmdletBinding()]
 
     param(
@@ -19,6 +22,8 @@ function Get-$EntityDisplayName {
         [string[]]`$Fields = "*"
     )
 
+    #Write-Host `$PSCmdlet.ParameterSetName
+
     switch (`$PSCmdlet.ParameterSetName){
 
         "Guid" {
@@ -32,11 +37,41 @@ function Get-$EntityDisplayName {
                     . ".\Templates\Common\PicklistValue.ps1"
                 }
             )
-               
 
-            (Get-CrmRecords -EntityLogicalName $EntityLogicalName -FilterAttribute name -FilterOperator eq -FilterValue `$Name -Fields `$Fields).CrmRecords
+            
+            #Superslow filtering mechanism. To be replaced with a FetchXML-generated version.
+            if (`$Fields -ne "*"){
+            `$AdditionalFieldsToGet = @()
+            
+             $(
+                foreach ($attribute in $attributes) {
+                   . ".\Templates\Get\AddAttribute.ps1"
+                }
+                
+            )
+
+                `$Fields = (`$Fields + `$AdditionalFieldsToGet) | Select-Object -Unique
+                Write-Verbose (`$Fields -join " ")
+
+            }
+
+            
+            `$Records = (Get-CrmRecords -EntityLogicalName $EntityLogicalName -Fields `$Fields -AllRows).CrmRecords
+
+            Write-Verbose "`$(`$Records.Count) found"
+
+            $(
+                foreach ($attribute in $attributes) {
+                    . ".\Templates\Get\$($attribute.AttributeType)Filter.ps1"
+                }
+                
+            )
+
+            Write-Verbose "Filtered to `$(`$Records.Count) found"
+
+            Write-Output `$Records
         }
 
     }
-
+    
 }
