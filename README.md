@@ -7,17 +7,20 @@ $Attributes = Get-CrmEntityAttributes -EntityLogicalName account |
     Where-Object { "picklist","string" -contains $_.AttributeType } |
     Select-Object SchemaName,
         @{
-            "N"="DisplayName";
+            "N"="DisplayName"
             E={ $_.DisplayName.UserLocalizedLabel.Label.Replace(" ","").Replace("/","").Replace("(","").Replace(")","").Replace(":","").Replace("-","") }
         },
         AttributeType,
-        @{ "N" = "Options" ; E = {
-            $values = @{}
-            $_.OptionSet.Options |
-                ForEach-Object {
-                    $values.Add($_.Value,$_.Label.UserLocalizedLabel.Label)
-                }
-            $values }
+        @{ 
+            "N" = "Options" 
+            E = {
+                $values = @{}
+                $_.OptionSet.Options |
+                    ForEach-Object {
+                        $values.Add($_.Value,$_.Label.UserLocalizedLabel.Label)
+                    }
+                $values
+            }
         } |
         Where-Object DisplayName -ne $null
 ```
