@@ -32,6 +32,7 @@ function Get-$Prefix$EntityDisplayName {
 
         default {
 
+            #These are not needed here
             $(
                 foreach ($attribute in $attributes | Where-Object AttributeType -eq "Picklist") {
                     . ".\Templates\Common\PicklistValue.ps1"

@@ -55,17 +55,17 @@ Describe "Generate-XrmFunction" {
         
     }
 
-    Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Template (Get-Content .\Templates\Get\MainGetTemplate.ps1 -Raw))
+    Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template (Get-Content .\Templates\Get\MainGetTemplate.ps1 -Raw))
 
 
     It "Can be called using Guid" {
-        $result = Get-Account -AccountId $AccountGuid1
+        $result = Get-XrmAccount -AccountId $AccountGuid1
         $result.accountid | Should Be $AccountGuid1
         $Global:GetCrmRecordCalled | Should Be 1
     }
 
     It "Can be called without using Guid" {
-        $result = Get-Account
+        $result = Get-XrmAccount
         $result.Count | Should Be 2
         $result[1].accountid | Should Be $AccountGuid2
         $Global:GetCrmRecordsCalled | Should Be 1
@@ -73,19 +73,19 @@ Describe "Generate-XrmFunction" {
      
 
     It "Can be called with valid parameter"{
-        $result = Get-Account -CustomerType "Competitor"
+        $result = Get-XrmAccount -CustomerType "Competitor"
         $result.accountid | Should Be $AccountGuid2
         $Global:GetCrmRecordsCalled | Should Be 2
     }
 
     It "Can query without including field to query in Fields" {
-        $result = Get-Account -Name "Testaccount1" -Fields "customertypecode"
+        $result = Get-XrmAccount -Name "Testaccount1" -Fields "customertypecode"
         $result.accountid | Should Be $AccountGuid1
         $Global:GetCrmRecordsCalled | Should Be 3
     }
 
     #It "Can't be called with invalid parameter"{
-    #    $result = Get-Account -CustomerType "Foo" -Name "Laa" | Should Throw "ParameterBindingValidationException"
+    #    $result = Get-XrmAccount -CustomerType "Foo" -Name "Laa" | Should Throw "ParameterBindingValidationException"
     #    $Global:GetCrmRecordsCalled | Should Be 2
     #}
 
