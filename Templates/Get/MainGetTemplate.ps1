@@ -61,10 +61,10 @@ function Get-$Prefix$EntityDisplayName {
                 foreach ($attribute in $attributes) {
                    #. ".\Templates\Get\AddAttribute.ps1"
                    #Get-GeneratedAttributeCodeBlock -AttributeLogicalName $attribute.SchemaName -AttributeDisplayName $attribute.DisplayName -Template (Get-Content -Raw ".\Templates\Get\AddAttribute.ps1")
-                    
+                  
                    @"
                     if (![string]::IsNullOrEmpty(`$$($Attribute.DisplayName))){
-                        `$AdditionalFieldsToGet += "$($Attribute.SchemaName)"
+                        `$AdditionalFieldsToGet += "$($Attribute.SchemaName.ToLower())"
                     }
 "@
                     
@@ -86,7 +86,7 @@ function Get-$Prefix$EntityDisplayName {
                 foreach ($attribute in $attributes) {
                    @"
                     if (![string]::IsNullOrEmpty(`$$($Attribute.DisplayName))){
-                        `$records = `$records | Where-Object $($Attribute.SchemaName) -eq `$$($Attribute.DisplayName)
+                        `$records = `$records | Where-Object $($Attribute.SchemaName.ToLower()) -eq `$$($Attribute.DisplayName)
                     }
 "@
                     #Get-GeneratedAttributeCodeBlock -AttributeOptions $attribute.Options -AttributeLogicalName $attribute.SchemaName -AttributeDisplayName $attribute.DisplayName -Template (Get-Content -Raw ".\Templates\Get\$($attribute.AttributeType)Filter.ps1")
