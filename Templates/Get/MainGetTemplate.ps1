@@ -1,6 +1,8 @@
 #Requires -modules Microsoft.Xrm.Data.PowerShell
 #Generated using https://github.com/kabtoffe/xrm-powershell-advanced-function-generator
-
+$(
+    Write-Verbose $attributes.Count
+)
 function Get-$Prefix$EntityDisplayName {
     [CmdletBinding()]
 
@@ -13,7 +15,25 @@ function Get-$Prefix$EntityDisplayName {
             $Pos = 0
             foreach ($attribute in $Attributes){
                 #. ".\Templates\Get\$($attribute.AttributeType)Parameter.ps1"
-                Get-GeneratedAttributeCodeBlock -AttributeOptions $attribute.Options -AttributeLogicalName $attribute.SchemaName -AttributeDisplayName $attribute.DisplayName -AdditionalProperties @{ "Position" = $Pos } -Template (Get-Content -Raw ".\Templates\Get\$($attribute.AttributeType)Parameter.ps1")
+                switch ($attribute.AttributeType){
+
+                    "string" {
+                        "`n`t[Parameter(Position=$Pos, ParameterSetName=`"Query`")]"
+                        "`n`t[string]`$$($Attribute.DisplayName),`n"
+                    }
+
+                    "picklist" {
+                        "`n`t[ValidateSet("
+                        ($Attribute.Options.Values | ForEach-Object {
+                                "`"$_`""
+                            }) -join ","
+                        ")]"
+                        "`n`t[Parameter(Position=$Pos, ParameterSetName=`"Query`")]"
+                        "`n`t[string]`$$($Attribute.DisplayName),`n"
+                    }
+                }
+
+                #Get-GeneratedAttributeCodeBlock -AttributeOptions $attribute.Options -AttributeLogicalName $attribute.SchemaName -AttributeDisplayName $attribute.DisplayName -AdditionalProperties @{ "Position" = $Pos } -Template (Get-Content -Raw ".\Templates\Get\$($attribute.AttributeType)Parameter.ps1")
                 $Pos++
             }
         )
@@ -32,16 +52,6 @@ function Get-$Prefix$EntityDisplayName {
         }
 
         default {
-
-            #These are not needed here
-            $(
-                foreach ($attribute in $attributes | Where-Object AttributeType -eq "Picklist") {
-                    #. ".\Templates\Common\PicklistValue.ps1"
-                    Get-GeneratedAttributeCodeBlock -AttributeOptions $attribute.Options -AttributeLogicalName $attribute.SchemaName -AttributeDisplayName $attribute.DisplayName -Template (Get-Content -Raw ".\Templates\Common\PicklistValue.ps1")
-                    
-                }
-            )
-
             
             #Superslow filtering mechanism. To be replaced with a FetchXML-generated version.
             if (`$Fields -ne "*"){
@@ -50,7 +60,13 @@ function Get-$Prefix$EntityDisplayName {
              $(
                 foreach ($attribute in $attributes) {
                    #. ".\Templates\Get\AddAttribute.ps1"
-                   Get-GeneratedAttributeCodeBlock -AttributeLogicalName $attribute.SchemaName -AttributeDisplayName $attribute.DisplayName -Template (Get-Content -Raw ".\Templates\Get\AddAttribute.ps1")
+                   #Get-GeneratedAttributeCodeBlock -AttributeLogicalName $attribute.SchemaName -AttributeDisplayName $attribute.DisplayName -Template (Get-Content -Raw ".\Templates\Get\AddAttribute.ps1")
+                    
+                   @"
+                    if (![string]::IsNullOrEmpty(`$$($Attribute.DisplayName))){
+                        `$AdditionalFieldsToGet += "$($Attribute.SchemaName)"
+                    }
+"@
                     
                 }
                 
@@ -68,7 +84,12 @@ function Get-$Prefix$EntityDisplayName {
 
             $(
                 foreach ($attribute in $attributes) {
-                    Get-GeneratedAttributeCodeBlock -AttributeOptions $attribute.Options -AttributeLogicalName $attribute.SchemaName -AttributeDisplayName $attribute.DisplayName -Template (Get-Content -Raw ".\Templates\Get\$($attribute.AttributeType)Filter.ps1")
+                   @"
+                    if (![string]::IsNullOrEmpty(`$$($Attribute.DisplayName))){
+                        `$records = `$records | Where-Object $($Attribute.SchemaName) -eq `$$($Attribute.DisplayName)
+                    }
+"@
+                    #Get-GeneratedAttributeCodeBlock -AttributeOptions $attribute.Options -AttributeLogicalName $attribute.SchemaName -AttributeDisplayName $attribute.DisplayName -Template (Get-Content -Raw ".\Templates\Get\$($attribute.AttributeType)Filter.ps1")
                     #. ".\Templates\Get\$($attribute.AttributeType)Filter.ps1"
                 }
                 

@@ -1,4 +1,4 @@
-﻿. .\Get-GeneratedAttributeCodeBlock.ps1 
+﻿. .\Invoke-Template.ps1
 
 function Get-GeneratedXrmFunction {
     [CmdletBinding()]
@@ -9,22 +9,22 @@ function Get-GeneratedXrmFunction {
         
         [string]$EntityLogicalName,
 
-        [object[]]$Attributes,
+        [pscustomobject[]]$Attributes,
 
         [string]$Template,
 
         [string]$Prefix="Xrm",
 
-        [hashtable]$AdditionalProperties
+        [hashtable]$AdditionalProperties=@{}
 
     )
 
-    #Add additional properties as variables
-    foreach ($key in $AdditionalProperties.Keys){
-        Invoke-Expression "`$$key = `"$($AdditionalProperties[$key])`""
-    }
+    $AdditionalProperties.Add("EntityDisplayName",$EntityDisplayName)
+    $AdditionalProperties.Add("EntityLogicalName",$EntityLogicalName)
+    $AdditionalProperties.Add("Attributes",[pscustomobject[]]$Attributes)
+    $AdditionalProperties.Add("Prefix",$Prefix)
 
-    $TemplateToInvoke = "@`"`n" + $Template + "`n`"@"
+    Write-Verbose $AdditionalProperties.ContainsKey("Attributes")
 
-    Invoke-Expression $TemplateToInvoke
+    Invoke-Template -Template $Template -TemplateData $AdditionalProperties
 }
