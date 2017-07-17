@@ -14,7 +14,7 @@ function Get-$Prefix$EntityDisplayName {
         $(
             $Pos = 0
             foreach ($attribute in $Attributes){
-                #. ".\Templates\Get\$($attribute.AttributeType)Parameter.ps1"
+
                 switch ($attribute.AttributeType){
 
                     "string" {
@@ -33,7 +33,6 @@ function Get-$Prefix$EntityDisplayName {
                     }
                 }
 
-                #Get-GeneratedAttributeCodeBlock -AttributeOptions $attribute.Options -AttributeLogicalName $attribute.SchemaName -AttributeDisplayName $attribute.DisplayName -AdditionalProperties @{ "Position" = $Pos } -Template (Get-Content -Raw ".\Templates\Get\$($attribute.AttributeType)Parameter.ps1")
                 $Pos++
             }
         )
@@ -42,8 +41,6 @@ function Get-$Prefix$EntityDisplayName {
         [Parameter(Position=999, ParameterSetName="Guid")]
         [string[]]`$Fields = "*"
     )
-
-    #Write-Host `$PSCmdlet.ParameterSetName
 
     switch (`$PSCmdlet.ParameterSetName){
 
@@ -59,9 +56,6 @@ function Get-$Prefix$EntityDisplayName {
             
              $(
                 foreach ($attribute in $attributes) {
-                   #. ".\Templates\Get\AddAttribute.ps1"
-                   #Get-GeneratedAttributeCodeBlock -AttributeLogicalName $attribute.SchemaName -AttributeDisplayName $attribute.DisplayName -Template (Get-Content -Raw ".\Templates\Get\AddAttribute.ps1")
-                  
                    @"
                     if (![string]::IsNullOrEmpty(`$$($Attribute.DisplayName))){
                         `$AdditionalFieldsToGet += "$($Attribute.SchemaName.ToLower())"
@@ -89,8 +83,6 @@ function Get-$Prefix$EntityDisplayName {
                         `$records = `$records | Where-Object $($Attribute.SchemaName.ToLower()) -eq `$$($Attribute.DisplayName)
                     }
 "@
-                    #Get-GeneratedAttributeCodeBlock -AttributeOptions $attribute.Options -AttributeLogicalName $attribute.SchemaName -AttributeDisplayName $attribute.DisplayName -Template (Get-Content -Raw ".\Templates\Get\$($attribute.AttributeType)Filter.ps1")
-                    #. ".\Templates\Get\$($attribute.AttributeType)Filter.ps1"
                 }
                 
             )

@@ -26,4 +26,4 @@ $Attributes = Get-CrmEntityAttributes -EntityLogicalName account |
 ```
 
 
-Right now only strings and picklists are supported. Check the test file to see an example how to call the generator.
+Right now only strings and picklists are supported with more to come. Check the test file to see an example how to call the generator. There are templates for Get- and Set-operations. This is very much a work in progress. When I have all the CRUD-templates done I will update this readme to be better.
