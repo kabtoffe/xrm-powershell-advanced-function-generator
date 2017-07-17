@@ -1,4 +1,6 @@
-﻿function Get-GeneratedXrmFunction {
+﻿. .\Get-GeneratedAttributeCodeBlock.ps1 
+
+function Get-GeneratedXrmFunction {
     [CmdletBinding()]
 
     param(
@@ -11,9 +13,16 @@
 
         [string]$Template,
 
-        [string]$Prefix="Xrm"
+        [string]$Prefix="Xrm",
+
+        [hashtable]$AdditionalProperties
 
     )
+
+    #Add additional properties as variables
+    foreach ($key in $AdditionalProperties.Keys){
+        Invoke-Expression "`$$key = `"$($AdditionalProperties[$key])`""
+    }
 
     $TemplateToInvoke = "@`"`n" + $Template + "`n`"@"
 

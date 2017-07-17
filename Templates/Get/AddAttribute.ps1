@@ -1,5 +1,5 @@
 @"
-if (![string]::IsNullOrEmpty(`$$($Attribute.DisplayName))){
-    `$AdditionalFieldsToGet += "$($Attribute.SchemaName)"
+if (![string]::IsNullOrEmpty(`$$AttributeDisplayName)){
+    `$AdditionalFieldsToGet += "$AttributeLogicalName"
 }
 "@
