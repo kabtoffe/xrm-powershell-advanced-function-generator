@@ -136,4 +136,18 @@ Describe "Generate-XrmFunction" {
         }
 
     }
+
+    Context "Remove-template" {
+        Mock Remove-CrmRecord {
+            return "$EntityLogicalName-$Id"
+        }
+
+        Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template (Get-Content .\Templates\Remove\MainRemoveTemplate.ps1 -Raw))
+
+        It "Can be called and calls Remove-CrmRecord with entitylogicalname and id" {
+            $result = Remove-XrmAccount -AccountId $AccountGuid1
+            $result | Should Be "account-$AccountGuid1"
+        }
+
+    }
 }
