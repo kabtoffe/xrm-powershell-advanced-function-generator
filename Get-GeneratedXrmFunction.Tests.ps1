@@ -129,16 +129,26 @@ Describe "Generate-XrmFunction" {
                 "Name" = "NewName"
             }
 
-            $result = $account1,$account2 | Set-XrmAccount @propertiesToSet | ForEach-Object {
+            $account1,$account2 | Set-XrmAccount @propertiesToSet | ForEach-Object {
                 $_["customertypecode"].Value | Should Be 3
                 $_["name"] | Should Be "NewName"
             }
         }
 
+        It "Can provide custom properties via Fields" {
+            $result = $account1 | Set-XrmAccount -Fields @{ "name" = "NewCustomName" }
+            $result["name"] | Should Be "NewCustomName"
+        }
+
+        It "Can resolve conflict on Fields - Should fail or not?" -Skip  {
+            $result = $account1 | Set-XrmAccount -Name "OtherCustomName" -Fields @{ "name" = "NewCustomName" }
+            $result["name"] | Should Be "NewCustomName" #Or not?
+        }
+
         Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "NotAccount" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template (Get-Content .\Templates\Set\MainSetTemplate.ps1 -Raw))
 
         It "Can be called via pipeline when logicalname doesn't match display name" {
-            $result = $account1,$account2 | Set-XrmNotAccount -CustomerType Customer | ForEach-Object {
+            $account1,$account2 | Set-XrmNotAccount -CustomerType Customer | ForEach-Object {
                 $_["customertypecode"].Value | Should Be 3
             }
         }
