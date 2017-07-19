@@ -17,6 +17,7 @@ function Set-$Prefix$EntityDisplayName {
         [guid]`$$($EntityDisplayName)Id,
 
         $(
+            $AttributeValueFromPipeline = $false
             . ".\Templates\Common\CommonAttributes.ps1"
         )
 
@@ -27,11 +28,14 @@ function Set-$Prefix$EntityDisplayName {
 
     BEGIN {
 
+        `$FieldsToSend = `$Fields
+
         $(
+            
             . ".\Templates\Common\CommonLogic.ps1"
         )
     }
     PROCESS{
-        Set-CrmRecord -EntityLogicalName $EntityLogicalName -Id `$$($EntityDisplayName)Id -Fields `$Fields
+        Set-CrmRecord -EntityLogicalName $EntityLogicalName -Id `$$($EntityDisplayName)Id -Fields `$FieldsToSend
     }
 }

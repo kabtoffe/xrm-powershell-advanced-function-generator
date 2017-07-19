@@ -201,6 +201,17 @@ Describe "Generate-XrmFunction" {
             $result["customertypecode"].Value | Should Be 3
         }
 
+        It "Can accept new object from pipeline" {
+            $result = [pscustomobject]@{ "Name" = "New account"  } | New-XrmAccount
+            $result["name"] | Should Be "New account"
+        }
+
+
+        It "Can accept two new object from pipeline" {
+            $result = [pscustomobject]@{ "Name" = "New account"  },[pscustomobject]@{ "Name" = "New account2"  } | New-XrmAccount
+            $result[0]["name"] | Should Be "New account"
+        }
+
     }
 
     Context "Remove-template" {

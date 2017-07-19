@@ -24,13 +24,13 @@ foreach ($attribute in $Attributes){
 
         "Picklist"{
             "`n`tif (![string]::IsNullOrEmpty(`$$($Attribute.DisplayName)Value)){"
-            "`n`t`t`$Fields.Add(`"$($attribute.SchemaName.ToLower())`",(New-CrmOptionSetValue -Value `$$($attribute.DisplayName)Value))"
+            "`n`t`t`$FieldsToSend.Add(`"$($attribute.SchemaName.ToLower())`",(New-CrmOptionSetValue -Value `$$($attribute.DisplayName)Value))"
             "`n`t}"
         }
 
         default {
             "`n`tif (![string]::IsNullOrEmpty(`$$($Attribute.DisplayName))){"
-            "`n`t`t`$Fields.Add(`"$($attribute.SchemaName.ToLower())`",`$$($attribute.DisplayName))"
+            "`n`t`t`$FieldsToSend.Add(`"$($attribute.SchemaName.ToLower())`",`$$($attribute.DisplayName))"
             "`n`t}"
         }
     }

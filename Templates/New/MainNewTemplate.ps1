@@ -9,6 +9,7 @@ function New-$Prefix$EntityDisplayName {
     param(
 
         $(
+            $AttributeValueFromPipeline = $true
             . ".\Templates\Common\CommonAttributes.ps1"
         )
 
@@ -17,9 +18,21 @@ function New-$Prefix$EntityDisplayName {
         
     )
 
-    $(
-        . ".\Templates\Common\CommonLogic.ps1"
-    )
+    BEGIN {
+        
+    }
 
-    New-CrmRecord -EntityLogicalName $EntityLogicalName -Fields `$Fields
+    PROCESS {
+        `$FieldsToSend = @{}
+
+        `$Fields.Keys | ForEach-Object {
+            `$FieldsToSend.Add(`$_,`$Fields[`$_])
+        }
+
+        $(
+            . ".\Templates\Common\CommonLogic.ps1"
+        )
+
+        New-CrmRecord -EntityLogicalName $EntityLogicalName -Fields `$FieldsToSend
+    }
 }

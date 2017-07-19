@@ -9,6 +9,7 @@ function Get-$Prefix$EntityDisplayName {
         [guid]`$$($EntityDisplayName)Id,
 
         $(
+            $AttributeValueFromPipeline = $false
             . ".\Templates\Common\CommonAttributes.ps1"
         )
 

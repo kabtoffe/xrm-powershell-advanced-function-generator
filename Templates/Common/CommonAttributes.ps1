@@ -1,3 +1,4 @@
+
 $Pos = 1
 foreach ($attribute in $Attributes){
     
@@ -7,7 +8,7 @@ foreach ($attribute in $Attributes){
             if ($Attribute.DisplayName -ne $Attribute.SchemaName){
                 "`t[alias(`"$($Attribute.SchemaName)`")]"
             }
-            "`n`t[Parameter(Position=$Pos, ParameterSetName=`"Common`")]"
+            "`n`t[Parameter(Position=$Pos, ParameterSetName=`"Common`", ValueFromPipelineByPropertyName=`$$AttributeValueFromPipeline)]"
             "`n`t[string]`$$($Attribute.DisplayName),`n"
         }
 
