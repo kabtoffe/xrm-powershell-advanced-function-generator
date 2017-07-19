@@ -112,6 +112,25 @@ Describe "Generate-XrmFunction" {
             $result["customertypecode"].Value | Should Be 3
         }
 
+        It "Takes pipeline input" {
+            $result = $account1 | Set-XrmAccount -CustomerType Customer
+            $result["customertypecode"].Value | Should Be 3
+        }
+
+        It "Can be called via pipeline with two objects" {
+            $result = $account1,$account2 | Set-XrmAccount -CustomerType Customer  | ForEach-Object {
+                $_["customertypecode"].Value | Should Be 3
+            }
+        }
+
+        Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "NotAccount" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template (Get-Content .\Templates\Set\MainSetTemplate.ps1 -Raw))
+
+        It "Can be called via pipeline when logicalname doesn't match display name" {
+            $result = $account1,$account2 | Set-XrmNotAccount -CustomerType Customer | ForEach-Object {
+                $_["customertypecode"].Value | Should Be 3
+            }
+        }
+
     }
 
     Context "New-template" {

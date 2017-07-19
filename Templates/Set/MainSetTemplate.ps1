@@ -8,7 +8,12 @@ function Set-$Prefix$EntityDisplayName {
 
     param(
 
-        [Parameter(Position=0, ParameterSetName="Guid", Mandatory=`$true)]
+        $(
+            if ($EntityLogicalName -ne $EntityDisplayName){
+                "`t[alias(`"$($EntityLogicalName)id`")]"
+            }
+        )
+        [Parameter(Position=0, ParameterSetName="Guid", Mandatory=`$true, ValueFromPipelineByPropertyName=`$true)]
         [guid]`$$($EntityDisplayName)Id,
 
         $(
@@ -44,39 +49,43 @@ function Set-$Prefix$EntityDisplayName {
         
     )
 
-    $(
-        foreach ($attribute in $Attributes | Where-Object AttributeType -eq "Picklist"){
-            @"
-            `$$($attribute.DisplayName)Value = `$null
+    BEGIN {
 
-            switch (`$$($attribute.DisplayName)){
-                $(
-                    foreach ($OptionKey in $Attribute.Options.Keys){
-                        "`n`t`t`"$($Attribute.Options[$OptionKey])`" { `$$($attribute.DisplayName)Value = $OptionKey }"
-                    }
-                )
-                `tdefault {}
-            }
+        $(
+            foreach ($attribute in $Attributes | Where-Object AttributeType -eq "Picklist"){
+                @"
+                `$$($attribute.DisplayName)Value = `$null
+
+                switch (`$$($attribute.DisplayName)){
+                    $(
+                        foreach ($OptionKey in $Attribute.Options.Keys){
+                            "`n`t`t`"$($Attribute.Options[$OptionKey])`" { `$$($attribute.DisplayName)Value = $OptionKey }"
+                        }
+                    )
+                    `tdefault {}
+                }
 "@
-        }
-        foreach ($attribute in $Attributes){
+            }
+            foreach ($attribute in $Attributes){
 
-            switch ($attribute.AttributeType){
+                switch ($attribute.AttributeType){
 
-                "Picklist"{
-                    "`n`tif (![string]::IsNullOrEmpty(`$$($Attribute.DisplayName))){"
-                    "`n`t`t`$Fields.Add(`"$($attribute.SchemaName.ToLower())`",(New-CrmOptionSetValue -Value `$$($attribute.DisplayName)Value))"
-                    "`n`t}"
-                }
+                    "Picklist"{
+                        "`n`tif (![string]::IsNullOrEmpty(`$$($Attribute.DisplayName))){"
+                        "`n`t`t`$Fields.Add(`"$($attribute.SchemaName.ToLower())`",(New-CrmOptionSetValue -Value `$$($attribute.DisplayName)Value))"
+                        "`n`t}"
+                    }
 
-                default {
-                    "`n`tif (![string]::IsNullOrEmpty(`$$($Attribute.DisplayName))){"
-                    "`n`t`t`$Fields.Add(`"$($attribute.SchemaName.ToLower())`",`$$($attribute.DisplayName))"
-                    "`n`t}"
+                    default {
+                        "`n`tif (![string]::IsNullOrEmpty(`$$($Attribute.DisplayName))){"
+                        "`n`t`t`$Fields.Add(`"$($attribute.SchemaName.ToLower())`",`$$($attribute.DisplayName))"
+                        "`n`t}"
+                    }
                 }
             }
-        }
-    )
-
-    Set-CrmRecord -EntityLogicalName $EntityLogicalName -Id `$$($EntityDisplayName)Id -Fields `$Fields
+        )
+    }
+    PROCESS{
+        Set-CrmRecord -EntityLogicalName $EntityLogicalName -Id `$$($EntityDisplayName)Id -Fields `$Fields
+    }
 }
