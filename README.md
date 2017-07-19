@@ -1,7 +1,15 @@
 # xrm-powershell-advanced-function-generator
-Code generator to create advanced functions to wrap Microsoft.Xrm.Data.PowerShell -module cmdlets.
+> A code generator to create advanced functions to wrap Microsoft.Xrm.Data.PowerShell -module cmdlets.
 
-To get a nice ordered attribute list to use with this you should probably do it in Excel. But you can use the Xrm.Data-cmdlets like this if you like:
+The idea is to generate poweruser tools for use with Dynamics 365 (CRM). The cmdlets that the Microsoft.Xrm.Data.PowerShell-module provides are fine for static scripts but not for "day-to-day" stuff as the are quite verbose. This project is alla about generating easy to use commands that "just work". You can obviously use these in your scripts as well.
+
+Right now only strings and picklists are supported with more to come. Check the test file to see examples on how to call the generator and how to use resulting functions. There are templates for Get, New, Set and Remove -verbs. Eg. generating all four for Account would result in these functions:
+- Get-XrmAccount
+- New-XrmAccount
+- Set-XrmAccount
+- Remove-XrmAccount
+
+To get a nice ordered attribute list to use with this you should probably do it in Excel. But you can use the Xrm.Data-cmdlets and crm metadata like this if you like:
 ```
 $Attributes = Get-CrmEntityAttributes -EntityLogicalName account |
     Where-Object { "picklist","string" -contains $_.AttributeType } |
@@ -24,6 +32,3 @@ $Attributes = Get-CrmEntityAttributes -EntityLogicalName account |
         } |
         Where-Object DisplayName -ne $null
 ```
-
-
-Right now only strings and picklists are supported with more to come. Check the test file to see an example how to call the generator. There are templates for Get- and Set-operations. This is very much a work in progress. When I have all the CRUD-templates done I will update this readme to be better.
