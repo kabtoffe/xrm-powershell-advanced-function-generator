@@ -149,5 +149,22 @@ Describe "Generate-XrmFunction" {
             $result | Should Be "account-$AccountGuid1"
         }
 
+        It "Can be called via pipeline with one object" {
+            $result = $account1 | Remove-XrmAccount
+            $result | Should Be "account-$AccountGuid1"
+        }
+
+        It "Can be called via pipeline with two objects" {
+            $result = $account1,$account2 | Remove-XrmAccount
+            $result[1] | Should Be "account-$AccountGuid2"
+        }
+
+        Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "NotAccount" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template (Get-Content .\Templates\Remove\MainRemoveTemplate.ps1 -Raw))
+
+        It "Can be called via pipeline when logicalname doesn't match display name" {
+            $result = $account1,$account2 | Remove-XrmNotAccount
+            $result[1] | Should Be "account-$AccountGuid2"
+        }
+
     }
 }

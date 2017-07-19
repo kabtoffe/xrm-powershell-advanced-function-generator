@@ -6,11 +6,18 @@ function Remove-$Prefix$EntityDisplayName {
 
     param(
 
-    [Parameter(Position=0, ParameterSetName="Guid", Mandatory=`$true)]
+    $(
+        if ($EntityLogicalName -ne $EntityDisplayName){
+            "`t[alias(`"$($EntityLogicalName)id`")]"
+        }
+    )
+    [Parameter(Position=0, Mandatory=`$true, ValueFromPipelineByPropertyName=`$true)]
     [guid]`$$($EntityDisplayName)Id
 
     )
-            
-    Remove-CrmRecord -EntityLogicalName $EntityLogicalName -Id `$$($EntityDisplayName)Id
+
+    PROCESS{
+        Remove-CrmRecord -EntityLogicalName $EntityLogicalName -Id `$$($EntityDisplayName)Id
+    }
     
 }
