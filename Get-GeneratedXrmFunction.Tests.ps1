@@ -113,4 +113,27 @@ Describe "Generate-XrmFunction" {
         }
 
     }
+
+    Context "New-template" {
+        Mock New-CrmRecord {
+            return $Fields
+        }
+
+        Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template (Get-Content .\Templates\New\MainNewTemplate.ps1 -Raw))
+
+        It "Can be called" {
+            New-XrmAccount
+        }
+
+        It "String parameters work" {
+            $result = New-XrmAccount  -Name "NewTestAccount"
+            $result["name"] | Should Be "NewTestAccount"
+        }
+
+        It "Picklist parameters work" {
+            $result = New-XrmAccount -CustomerType Customer
+            $result["customertypecode"].Value | Should Be 3
+        }
+
+    }
 }
