@@ -7,7 +7,7 @@ foreach ($attribute in $Attributes){
             if ($Attribute.DisplayName -ne $Attribute.SchemaName){
                 "`t[alias(`"$($Attribute.SchemaName)`")]"
             }
-            "`n`t[Parameter(Position=$Pos, ParameterSetName=`"Guid`")]"
+            "`n`t[Parameter(Position=$Pos, ParameterSetName=`"Common`")]"
             "`n`t[string]`$$($Attribute.DisplayName),`n"
         }
 
@@ -17,7 +17,7 @@ foreach ($attribute in $Attributes){
                     "`"$_`""
                 }) -join ","
             ")]"
-            "`n`t[Parameter(Position=$Pos, ParameterSetName=`"Guid`")]"
+            "`n`t[Parameter(Position=$Pos, ParameterSetName=`"Common`")]"
             "`n`t[string]`$$($Attribute.DisplayName),`n"
             "`n "
             
@@ -25,7 +25,7 @@ foreach ($attribute in $Attributes){
             $Pos++
             $Attribute.Options.Keys -join ","
             ")]"
-            "`n`t[Parameter(Position=$Pos, ParameterSetName=`"Guid`")]"
+            "`n`t[Parameter(Position=$Pos, ParameterSetName=`"Common`")]"
             if ($Attribute.DisplayName -ne $Attribute.SchemaName){
                 "`n`t[alias(`"$($Attribute.SchemaName)`")]"
             }

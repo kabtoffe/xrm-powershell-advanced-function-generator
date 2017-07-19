@@ -12,7 +12,7 @@ function New-$Prefix$EntityDisplayName {
             . ".\Templates\Common\CommonAttributes.ps1"
         )
 
-        [Parameter(Position=999, ParameterSetName="Guid")]
+        [Parameter(Position=999, ParameterSetName="Common")]
         [hashtable]`$Fields=@{}
         
     )

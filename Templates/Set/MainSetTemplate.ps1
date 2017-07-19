@@ -13,14 +13,14 @@ function Set-$Prefix$EntityDisplayName {
                 "`t[alias(`"$($EntityLogicalName)id`")]"
             }
         )
-        [Parameter(Position=0, ParameterSetName="Guid", Mandatory=`$true, ValueFromPipelineByPropertyName=`$true)]
+        [Parameter(Position=0, ParameterSetName="Common", Mandatory=`$true, ValueFromPipelineByPropertyName=`$true)]
         [guid]`$$($EntityDisplayName)Id,
 
         $(
             . ".\Templates\Common\CommonAttributes.ps1"
         )
 
-        [Parameter(Position=999, ParameterSetName="Guid")]
+        [Parameter(Position=999, ParameterSetName="Common")]
         [hashtable]`$Fields=@{}
         
     )
