@@ -30,14 +30,7 @@ function Get-$Prefix$EntityDisplayName {
             `$AdditionalFieldsToGet = @()
             
              $(
-                foreach ($attribute in $attributes) {
-                   @"
-                    if (![string]::IsNullOrEmpty(`$$($Attribute.DisplayName))){
-                        `$AdditionalFieldsToGet += "$($Attribute.SchemaName.ToLower())"
-                    }
-"@
-                    
-                }
+                . ".\Templates\Get\FieldsToGetLogic.ps1"
                 
             )
 
@@ -52,14 +45,7 @@ function Get-$Prefix$EntityDisplayName {
             Write-Verbose "`$(`$Records.Count) found"
 
             $(
-                foreach ($attribute in $attributes) {
-                   @"
-                    if (![string]::IsNullOrEmpty(`$$($Attribute.DisplayName))){
-                        `$records = `$records | Where-Object $($Attribute.SchemaName.ToLower()) -eq `$$($Attribute.DisplayName)
-                    }
-"@
-                }
-                
+                . ".\Templates\Get\FilteringLogic.ps1"
             )
 
             Write-Verbose "Filtered to `$(`$Records.Count) found"
