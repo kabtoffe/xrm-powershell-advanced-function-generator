@@ -16,6 +16,11 @@ Describe "Generate-XrmFunction" {
         "AttributeType" = "string"
     },
     [PSCustomObject]@{
+        "SchemaName" = "telephone1"
+        "DisplayName" = "Phone"
+        "AttributeType" = "string"
+    },
+    [PSCustomObject]@{
         "SchemaName" = "customertypecode"
         "DisplayName" = "CustomerType"
         "AttributeType" = "Picklist"
@@ -108,8 +113,8 @@ Describe "Generate-XrmFunction" {
         }
 
         It "Picklist parameters work" {
-            $result = Set-XrmAccount -AccountId $AccountGuid1 -CustomerType Customer
-            $result["customertypecode"].Value | Should Be 3
+            $result = Set-XrmAccount -AccountId $AccountGuid1 -CustomerType Competitor
+            $result["customertypecode"].Value | Should Be 1
         }
 
         It "Takes pipeline input" {
@@ -140,9 +145,27 @@ Describe "Generate-XrmFunction" {
             $result["name"] | Should Be "NewCustomName"
         }
 
-        It "Can resolve conflict on Fields - Should fail or not?" -Skip  {
-            $result = $account1 | Set-XrmAccount -Name "OtherCustomName" -Fields @{ "name" = "NewCustomName" }
-            $result["name"] | Should Be "NewCustomName" #Or not?
+        It "Can use picklist value as parameter" {
+            $result = Set-XrmAccount -CustomerTypeValue 3 -AccountId $AccountGuid1
+            $result["customertypecode"].Value | Should Be 3
+        }
+
+        It "Should fail when picklist value provided by two parameters" {
+           { Set-XrmAccount -CustomerTypeValue 3 -CustomerType "Competitor" -AccountId $AccountGuid1 } | Should Throw
+        }
+
+        It "Can use string schemaname as parameter (alias)" {
+            $result = Set-XrmAccount -AccountId $AccountGuid1 -telephone1 "911"
+            $result["telephone1"] | Should Be "911"
+        }
+
+        It "Can use picklist (value) schemaname as parameter (alias)" {
+            $result = Set-XrmAccount -AccountId $AccountGuid1 -customertypecode 1
+            $result["customertypecode"].Value | Should Be 1
+        }
+
+        It "Providing field via both parameters and Fields should fail"  {
+            { $account1 | Set-XrmAccount -Name "OtherCustomName" -Fields @{ "name" = "NewCustomName" } } | Should Throw
         }
 
         Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "NotAccount" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template (Get-Content .\Templates\Set\MainSetTemplate.ps1 -Raw))
