@@ -123,6 +123,18 @@ Describe "Generate-XrmFunction" {
             }
         }
 
+        It "Can be used with splatting" {
+            $propertiesToSet = @{
+                "CustomerType" = "Customer"
+                "Name" = "NewName"
+            }
+
+            $result = $account1,$account2 | Set-XrmAccount @propertiesToSet | ForEach-Object {
+                $_["customertypecode"].Value | Should Be 3
+                $_["name"] | Should Be "NewName"
+            }
+        }
+
         Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "NotAccount" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template (Get-Content .\Templates\Set\MainSetTemplate.ps1 -Raw))
 
         It "Can be called via pipeline when logicalname doesn't match display name" {
@@ -130,6 +142,8 @@ Describe "Generate-XrmFunction" {
                 $_["customertypecode"].Value | Should Be 3
             }
         }
+
+
 
     }
 
