@@ -1,6 +1,4 @@
-﻿$here = Split-Path -Parent $MyInvocation.MyCommand.Path
-$sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
-. "$here\$sut"
+﻿Import-Module ..\XrmFunctionGenerator\XrmFunctionGenerator.psd1 -Force
 
 Describe "Invoke-Template" {
     It "Returns template" {

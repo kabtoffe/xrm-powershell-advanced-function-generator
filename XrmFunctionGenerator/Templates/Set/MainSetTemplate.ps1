@@ -18,7 +18,7 @@ function Set-$Prefix$EntityDisplayName {
 
         $(
             $AttributeValueFromPipeline = $false
-            . ".\Templates\Common\CommonAttributes.ps1"
+            . "$ModuleRootDir\Templates\Common\CommonAttributes.ps1"
         )
 
         [Parameter(Position=999, ParameterSetName="Common")]
@@ -32,7 +32,7 @@ function Set-$Prefix$EntityDisplayName {
 
         $(
             
-            . ".\Templates\Common\CommonLogic.ps1"
+            . "$ModuleRootDir\Templates\Common\CommonLogic.ps1"
         )
     }
     PROCESS{

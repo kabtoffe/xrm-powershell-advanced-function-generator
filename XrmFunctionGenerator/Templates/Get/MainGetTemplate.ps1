@@ -10,7 +10,7 @@ function Get-$Prefix$EntityDisplayName {
 
         $(
             $AttributeValueFromPipeline = $false
-            . ".\Templates\Common\CommonAttributes.ps1"
+            . "$ModuleRootDir\Templates\Common\CommonAttributes.ps1"
         )
 
         [Parameter(Position=999, ParameterSetName="Common")]
@@ -31,7 +31,7 @@ function Get-$Prefix$EntityDisplayName {
             `$AdditionalFieldsToGet = @()
             
              $(
-                . ".\Templates\Get\FieldsToGetLogic.ps1"
+                . "$ModuleRootDir\Templates\Get\FieldsToGetLogic.ps1"
                 
             )
 
@@ -46,7 +46,7 @@ function Get-$Prefix$EntityDisplayName {
             Write-Verbose "`$(`$Records.Count) found"
 
             $(
-                . ".\Templates\Get\FilteringLogic.ps1"
+                . "$ModuleRootDir\Templates\Get\FilteringLogic.ps1"
             )
 
             Write-Verbose "Filtered to `$(`$Records.Count) found"

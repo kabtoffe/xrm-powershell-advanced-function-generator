@@ -10,7 +10,7 @@ function New-$Prefix$EntityDisplayName {
 
         $(
             $AttributeValueFromPipeline = $true
-            . ".\Templates\Common\CommonAttributes.ps1"
+            . "$ModuleRootDir\Templates\Common\CommonAttributes.ps1"
         )
 
         [Parameter(Position=999, ParameterSetName="Common")]
@@ -30,7 +30,7 @@ function New-$Prefix$EntityDisplayName {
         }
 
         $(
-            . ".\Templates\Common\CommonLogic.ps1"
+            . "$ModuleRootDir\Templates\Common\CommonLogic.ps1"
         )
 
         New-CrmRecord -EntityLogicalName $EntityLogicalName -Fields `$FieldsToSend

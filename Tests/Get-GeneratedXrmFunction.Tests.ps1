@@ -1,6 +1,4 @@
-﻿$here = Split-Path -Parent $MyInvocation.MyCommand.Path
-$sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
-. "$here\$sut"
+﻿Import-Module ..\XrmFunctionGenerator\XrmFunctionGenerator.psd1 -Force
 
 Describe "Generate-XrmFunction" {
 
@@ -61,7 +59,7 @@ Describe "Generate-XrmFunction" {
             
         }
 
-        Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template (Get-Content .\Templates\Get\MainGetTemplate.ps1 -Raw))
+        Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Get")
 
 
         It "Can be called using Guid" {
@@ -101,7 +99,7 @@ Describe "Generate-XrmFunction" {
             return $Fields
         }
 
-        Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template (Get-Content .\Templates\Set\MainSetTemplate.ps1 -Raw))
+        Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Set")
 
         It "Can be called" {
             Set-XrmAccount -AccountId $AccountGuid1
@@ -168,7 +166,7 @@ Describe "Generate-XrmFunction" {
             { $account1 | Set-XrmAccount -Name "OtherCustomName" -Fields @{ "name" = "NewCustomName" } } | Should Throw
         }
 
-        Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "NotAccount" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template (Get-Content .\Templates\Set\MainSetTemplate.ps1 -Raw))
+        Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "NotAccount" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Set")
 
         It "Can be called via pipeline when logicalname doesn't match display name" {
             $account1,$account2 | Set-XrmNotAccount -CustomerType Customer | ForEach-Object {
@@ -185,7 +183,7 @@ Describe "Generate-XrmFunction" {
             return $Fields
         }
 
-        Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template (Get-Content .\Templates\New\MainNewTemplate.ps1 -Raw))
+        Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "New")
 
         It "Can be called" {
             New-XrmAccount
@@ -219,7 +217,7 @@ Describe "Generate-XrmFunction" {
             return "$EntityLogicalName-$Id"
         }
 
-        Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template (Get-Content .\Templates\Remove\MainRemoveTemplate.ps1 -Raw))
+        Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Remove")
 
         It "Can be called and calls Remove-CrmRecord with entitylogicalname and id" {
             $result = Remove-XrmAccount -AccountId $AccountGuid1
@@ -236,7 +234,7 @@ Describe "Generate-XrmFunction" {
             $result[1] | Should Be "account-$AccountGuid2"
         }
 
-        Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "NotAccount" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template (Get-Content .\Templates\Remove\MainRemoveTemplate.ps1 -Raw))
+        Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "NotAccount" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Remove")
 
         It "Can be called via pipeline when logicalname doesn't match display name" {
             $result = $account1,$account2 | Remove-XrmNotAccount

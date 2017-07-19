@@ -1,6 +1,4 @@
-﻿. .\Invoke-Template.ps1
-
-function Get-GeneratedXrmFunction {
+﻿function Get-GeneratedXrmFunction {
     [CmdletBinding()]
 
     param(
@@ -26,5 +24,30 @@ function Get-GeneratedXrmFunction {
 
     Write-Verbose $AdditionalProperties.ContainsKey("Attributes")
 
-    Invoke-Template -Template $Template -TemplateData $AdditionalProperties
+    $TemplateToUse = ""
+
+    switch ($Template){
+
+        "Get" {
+            $TemplateToUse = Get-Content -Raw "$PSScriptRoot\Templates\Get\MainGetTemplate.ps1" 
+        }
+
+        "Set" {
+            $TemplateToUse = Get-Content -Raw "$PSScriptRoot\Templates\Set\MainSetTemplate.ps1" 
+        }
+
+        "New" {
+            $TemplateToUse = Get-Content -Raw "$PSScriptRoot\Templates\New\MainNewTemplate.ps1" 
+        }
+
+        "Remove" {
+            $TemplateToUse = Get-Content -Raw "$PSScriptRoot\Templates\Remove\MainRemoveTemplate.ps1" 
+        }
+
+        default {
+            $TemplateToUse = $Template
+        }
+    }
+
+    Invoke-Template -Template $TemplateToUse -TemplateData $AdditionalProperties
 }
