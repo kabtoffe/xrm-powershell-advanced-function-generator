@@ -1,7 +1,7 @@
 # xrm-powershell-advanced-function-generator
 > A code generator to create advanced functions to wrap Microsoft.Xrm.Data.PowerShell -module cmdlets.
 
-The idea is to generate poweruser tools for use with Dynamics 365 (CRM). The cmdlets that the Microsoft.Xrm.Data.PowerShell-module provides are fine for static scripts but not for "day-to-day" stuff as the are quite verbose. This project is alla about generating easy to use commands that "just work". You can obviously use these in your scripts as well.
+The idea is to generate poweruser tools for use with Dynamics 365 (CRM). The cmdlets that the Microsoft.Xrm.Data.PowerShell-module provides are fine for static scripts but not for "day-to-day" stuff as the are quite verbose. This project is alla about generating easy to use commands that "just work". You can obviously use these in your scripts as well. The querying functionality of the Get-function should probably not be used yet as it always gets all records from CRM and then applies filters using `Where-Object`. You can probably get away with it if you don't have a lot of data and limit the result fields (`-Fields` parameter).
 
 Right now only strings and picklists are supported with more to come. Check the test file to see examples on how to call the generator and how to use resulting functions. There are templates for Get, New, Set and Remove -verbs. Eg. generating all four for Account would result in these functions:
 - Get-XrmAccount
