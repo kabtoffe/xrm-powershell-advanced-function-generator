@@ -33,6 +33,7 @@ function Get-$Prefix$EntityDisplayName {
              $(
                 . "$ModuleRootDir\Templates\Get\FieldsToGetLogic.ps1"
                 
+                
             )
 
                 `$Fields = (`$Fields + `$AdditionalFieldsToGet) | Select-Object -Unique
@@ -40,18 +41,19 @@ function Get-$Prefix$EntityDisplayName {
 
             }
 
-            
-            `$Records = (Get-CrmRecords -EntityLogicalName $EntityLogicalName -Fields `$Fields -AllRows).CrmRecords
+            $(
+                . "$ModuleRootDir\Templates\Common\ParameterValueLogic.ps1"
+            )
 
-            Write-Verbose "`$(`$Records.Count) found"
+            `$conditions = @()
 
             $(
                 . "$ModuleRootDir\Templates\Get\FilteringLogic.ps1"
             )
 
-            Write-Verbose "Filtered to `$(`$Records.Count) found"
+            `$FetchXml = Get-FetchXml -EntityLogicalName $EntityLogicalName -Conditions `$conditions
 
-            Write-Output `$Records
+            (Get-CrmRecordsByFetch -Fetch `$FetchXml -AllRows).CrmRecords
         }
 
     }
