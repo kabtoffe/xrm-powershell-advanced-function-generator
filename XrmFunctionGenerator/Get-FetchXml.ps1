@@ -4,7 +4,9 @@ function Get-FetchXml{
 
         $EntityLogicalName,
 
-        [object[]]$Conditions
+        [object[]]$Conditions,
+
+        [string[]]$Fields
     )
 
     Invoke-Template `
@@ -12,6 +14,7 @@ function Get-FetchXml{
         -TemplateData @{
             "Conditions" = $Conditions
             "EntityLogicalName" = $EntityLogicalName
+            "Fields" = $Fields
         }
 
 }

@@ -51,7 +51,7 @@ function Get-$Prefix$EntityDisplayName {
                 . "$ModuleRootDir\Templates\Get\FilteringLogic.ps1"
             )
 
-            `$FetchXml = Get-FetchXml -EntityLogicalName $EntityLogicalName -Conditions `$conditions
+            `$FetchXml = Get-FetchXml -EntityLogicalName $EntityLogicalName -Conditions `$conditions -Fields `$Fields
 
             (Get-CrmRecordsByFetch -Fetch `$FetchXml -AllRows).CrmRecords
         }

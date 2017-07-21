@@ -76,6 +76,7 @@ Describe "Generate-XrmFunction" {
 
         It "Can be called using query" {
             $result = [xml](Get-XrmAccount -Name "Testaccount")
+            $result.fetch.entity.name | Should be "account"
             $result.fetch.entity.filter.condition.attribute  | Should Be "name"
             $result.fetch.entity.filter.condition.operator  | Should Be "eq"
             $result.fetch.entity.filter.condition.value  | Should Be "Testaccount"
@@ -96,6 +97,22 @@ Describe "Generate-XrmFunction" {
             $result.fetch.entity.filter.condition.attribute  | Should Be "customertypecode"
             $result.fetch.entity.filter.condition.operator  | Should Be "eq"
             $result.fetch.entity.filter.condition.value  | Should Be 1
+        }
+
+        It "If Fields is not provided get all fields" {
+            $result = [xml](Get-XrmAccount -CustomerType Competitor)
+            $result.fetch.entity | Get-Member -Name all-attributes | Should Not Be $null
+        }
+
+        It "If Fields is * get all fields" {
+            $result = [xml](Get-XrmAccount -CustomerType Competitor -Fields '*')
+            $result.fetch.entity | Get-Member -Name all-attributes | Should Not Be $null
+        }
+
+        It "If fields are provided only get those" {
+            $result = [xml](Get-XrmAccount -CustomerType Competitor -Fields "name","customertypecode")
+            $result.fetch.entity | Get-Member -Name all-attributes | Should Be $null
+            $result.fetch.entity.attribute.name -join ";" | Should Be "name;customertypecode"
         }
 
         It "Can be called without using Guid" -Skip {
