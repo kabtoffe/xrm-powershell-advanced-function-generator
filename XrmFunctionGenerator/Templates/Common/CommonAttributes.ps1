@@ -44,10 +44,10 @@ foreach ($attribute in $Attributes){
             if ($TemplateType -eq "Get") {
                 "`n$Padding[Parameter(Position=$Pos, ParameterSetName=`"Common`")]"
                 "`n$Padding[string]`$$($Attribute.DisplayName),`n"
-                "`n "
+                
                 $Pos++
             }
-            
+            "`n "
             
             if ($Attribute.DisplayName -ne $Attribute.SchemaName){
                 "$Padding[alias(`"$($Attribute.SchemaName)`")]"

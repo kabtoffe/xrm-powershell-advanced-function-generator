@@ -304,6 +304,7 @@ Describe "Generate-XrmFunction" {
         }
 
         Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Set")
+        Get-GeneratedXrmFunction -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Set" > SetTestFunction.ps1
 
         It "Can be called" {
             Set-XrmAccount -AccountId $AccountGuid1

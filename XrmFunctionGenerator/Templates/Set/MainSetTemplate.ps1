@@ -15,12 +15,10 @@ function Set-$Prefix$EntityDisplayName {
         )
         [Parameter(Position=0, ParameterSetName="Common", Mandatory=`$true, ValueFromPipelineByPropertyName=`$true, ValueFromPipeline=`$true)]
         [guid]`$$($EntityDisplayName)Id,
-
         $(
             $AttributeValueFromPipeline = $false
             . "$ModuleRootDir\Templates\Common\CommonAttributes.ps1"
         )
-
         [Parameter(Position=999, ParameterSetName="Common")]
         [hashtable]`$Fields=@{}
         
@@ -32,10 +30,14 @@ function Set-$Prefix$EntityDisplayName {
 
         $(
             
+            $Padding = "`t`t"
             . "$ModuleRootDir\Templates\Common\CommonLogic.ps1"
         )
     }
-    PROCESS{
+
+    PROCESS {
+
         Set-CrmRecord -EntityLogicalName $EntityLogicalName -Id `$$($EntityDisplayName)Id -Fields `$FieldsToSend
+
     }
 }

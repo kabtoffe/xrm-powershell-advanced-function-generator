@@ -1,20 +1,23 @@
+
+
 foreach ($attribute in $Attributes | Where-Object AttributeType -eq "Picklist"){
     @"
 
-            if (`$MyInvocation.BoundParameters.ContainsKey("$($attribute.DisplayName)") -and `$MyInvocation.BoundParameters.ContainsKey("$($attribute.DisplayName)Value"))    {
-                throw "Provide only one of $($attribute.DisplayName) and $($attribute.DisplayName)Value not both"
-            }
+$($Padding)if (`$MyInvocation.BoundParameters.ContainsKey("$($attribute.DisplayName)") -and `$MyInvocation.BoundParameters.ContainsKey("$($attribute.DisplayName)Value"))    {
+$Padding    throw "Provide only one of $($attribute.DisplayName) and $($attribute.DisplayName)Value not both"
+$Padding}
 
-            switch (`$$($attribute.DisplayName)){
+$($Padding)switch (`$$($attribute.DisplayName)){
                 $(
                     foreach ($OptionKey in $Attribute.Options.Keys){
-                        "`n`t`t`t`"$($Attribute.Options[$OptionKey])`" { `$$($attribute.DisplayName)Value = $OptionKey }"
+                        "`n$Padding`t`"$($Attribute.Options[$OptionKey])`" { `$$($attribute.DisplayName)Value = $OptionKey }"
                     }
                 )
-                default {
-                    #Let's not change potentially provided specific value
-                }
-            
-            }
+$($Padding)     default {
+$($Padding)         #Let's not change potentially provided specific value
+$($Padding)     }
+$($Padding) 
+$($Padding)}
+
 "@
 }

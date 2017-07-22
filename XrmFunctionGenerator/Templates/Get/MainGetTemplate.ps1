@@ -25,6 +25,7 @@ function Get-$Prefix$EntityDisplayName {
         default {
 
             $(
+                $Padding = "`t`t`t"
                 . "$ModuleRootDir\Templates\Common\ParameterValueLogic.ps1"
             )
 
