@@ -222,6 +222,12 @@ Describe "Generate-XrmFunction" {
             $result["customertypecode"].Value | Should Be 3
         }
 
+        It "Can use lookup value as parameter" {
+            $result = Set-XrmAccount -PrimaryContactId $ContactId -AccountId $AccountGuid1
+            $result["new_primarycontact"].Id | Should Be $ContactId
+            $result["new_primarycontact"].LogicalName | Should Be "contact"
+        }
+
         It "Should fail when picklist value provided by two parameters" {
            { Set-XrmAccount -CustomerTypeValue 3 -CustomerType "Competitor" -AccountId $AccountGuid1 } | Should Throw
         }
@@ -239,6 +245,8 @@ Describe "Generate-XrmFunction" {
         It "Providing field via both parameters and Fields should fail"  {
             { $account1 | Set-XrmAccount -Name "OtherCustomName" -Fields @{ "name" = "NewCustomName" } } | Should Throw
         }
+
+        
 
         Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "NotAccount" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Set")
 
