@@ -255,7 +255,7 @@ Describe "Generate-XrmFunction" {
         }
 
         It "Can be called via pipeline with two objects" {
-            $result = $account1,$account2 | Set-XrmAccount -CustomerType Customer  | ForEach-Object {
+            $account1,$account2 | Set-XrmAccount -CustomerType Customer  | ForEach-Object {
                 $_["customertypecode"].Value | Should Be 3
             }
         }
