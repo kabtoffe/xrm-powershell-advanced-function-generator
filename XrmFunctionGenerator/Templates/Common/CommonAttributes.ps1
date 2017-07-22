@@ -39,9 +39,10 @@ foreach ($attribute in $Attributes){
                 "`n`t[Parameter(Position=$Pos, ParameterSetName=`"Common`")]"
                 "`n`t[string]`$$($Attribute.DisplayName),`n"
                 "`n "
+                $Pos++
             }
             
-            $Pos++
+            
             "`n`t[Parameter(Position=$Pos, ParameterSetName=`"Common`")]"
             if ($Attribute.DisplayName -ne $Attribute.SchemaName){
                 "`n`t[alias(`"$($Attribute.SchemaName)`")]"
