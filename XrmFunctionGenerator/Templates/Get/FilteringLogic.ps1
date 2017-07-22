@@ -13,13 +13,33 @@ foreach ($attribute in $attributes) {
 "@
 }
 
-        default {
+        "string" {
     @"
     if (![string]::IsNullOrEmpty(`$$($Attribute.DisplayName))){
         `$conditions += [pscustomobject]@{
             "Attribute" = "$($Attribute.SchemaName.ToLower())"
             "Operator" = "eq"
             "Value" = `$$($Attribute.DisplayName)
+        }
+    }
+"@
+        }
+
+"lookup" {
+    @"
+    if (![string]::IsNullOrEmpty(`$$($Attribute.DisplayName))){
+        `$conditions += [pscustomobject]@{
+            "Attribute" = "$($Attribute.SchemaName.ToLower())name"
+            "Operator" = "eq"
+            "Value" = `$$($Attribute.DisplayName)
+        }
+    }
+
+    if (![string]::IsNullOrEmpty(`$$($Attribute.DisplayName)Id)){
+        `$conditions += [pscustomobject]@{
+            "Attribute" = "$($Attribute.SchemaName.ToLower())"
+            "Operator" = "eq"
+            "Value" = `$$($Attribute.DisplayName)Id
         }
     }
 "@

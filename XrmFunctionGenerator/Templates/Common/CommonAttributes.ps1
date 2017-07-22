@@ -32,6 +32,21 @@ foreach ($attribute in $Attributes){
             }
             "`n`t[int]`$$($Attribute.DisplayName)Value,`n"
         }
+
+        "lookup" {
+           
+            "`n`t[Parameter(Position=$Pos, ParameterSetName=`"Common`")]"
+            "`n`t[string]`$$($Attribute.DisplayName),`n"
+            "`n "
+            
+            
+            $Pos++
+            "`n`t[Parameter(Position=$Pos, ParameterSetName=`"Common`")]"
+            if ($Attribute.DisplayName -ne $Attribute.SchemaName){
+                "`n`t[alias(`"$($Attribute.SchemaName)`")]"
+            }
+            "`n`t[guid]`$$($Attribute.DisplayName)Id,`n"
+        }
     }
 
     $Pos++

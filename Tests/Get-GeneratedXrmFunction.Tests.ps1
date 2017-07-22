@@ -26,8 +26,13 @@ Describe "Generate-XrmFunction" {
             1 = "Competitor"
             3 = "Customer"
         }
+    },
+    [PSCustomObject]@{
+        "SchemaName" = "new_primarycontact"
+        "DisplayName" = "PrimaryContact"
+        "AttributeType" = "Lookup"
+        "TargetEntityLogicalName" = "contact"
     }
-    
     
 
     $account1 =  [pscustomobject]@{
@@ -38,6 +43,8 @@ Describe "Generate-XrmFunction" {
         "accountid" = $AccountGuid2
         "customertypecode" = "Competitor"
     }
+
+    $ContactId = [Guid]::NewGuid()
 
     Context "Get-template"{
         Mock Get-CrmRecord {
@@ -98,6 +105,22 @@ Describe "Generate-XrmFunction" {
             $result.fetch.entity.filter.condition.operator  | Should Be "eq"
             $result.fetch.entity.filter.condition.value  | Should Be 1
         }
+
+        It "Can be called using lookup with name condition" {
+            $result = [xml](Get-XrmAccount -PrimaryContact "Firstname Lastname")
+            $result.fetch.entity.filter.condition.attribute  | Should Be "new_primarycontactname"
+            $result.fetch.entity.filter.condition.operator  | Should Be "eq"
+            $result.fetch.entity.filter.condition.value  | Should Be "Firstname Lastname"
+        }
+
+        It "Can be called using lookup with id condition" {
+            $result = [xml](Get-XrmAccount -PrimaryContactId $ContactId)
+            $result.fetch.entity.filter.condition.attribute  | Should Be "new_primarycontact"
+            $result.fetch.entity.filter.condition.operator  | Should Be "eq"
+            $result.fetch.entity.filter.condition.value  | Should Be $ContactId.ToString()
+        }
+
+
 
         It "If Fields is not provided get all fields" {
             $result = [xml](Get-XrmAccount -CustomerType Competitor)
