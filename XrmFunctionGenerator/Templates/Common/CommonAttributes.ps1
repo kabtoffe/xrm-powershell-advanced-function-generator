@@ -1,53 +1,60 @@
 
 $Pos = 1
+
+$Padding = "`t`t"
+
 foreach ($attribute in $Attributes){
     
     switch ($attribute.AttributeType){
 
         default {
+            
             if ($Attribute.DisplayName -ne $Attribute.SchemaName){
-                "`t[alias(`"$($Attribute.SchemaName)`")]"
+                "$Padding[alias(`"$($Attribute.SchemaName)`")]"
             }
-            "`n`t[Parameter(Position=$Pos, ParameterSetName=`"Common`", ValueFromPipelineByPropertyName=`$$AttributeValueFromPipeline)]"
-            "`n`t[$($AttributeToParameterTypeMapping[$attribute.AttributeType])]`$$($Attribute.DisplayName),`n"
+            "`n$Padding[Parameter(Position=$Pos, ParameterSetName=`"Common`", ValueFromPipelineByPropertyName=`$$AttributeValueFromPipeline)]"
+            "`n$Padding[$($AttributeToParameterTypeMapping[$attribute.AttributeType])]`$$($Attribute.DisplayName),`n"
+            "`n"
+            
         }
 
         "picklist" {
-            "`n`t[ValidateSet("
+            "$Padding[ValidateSet("
             ($Attribute.Options.Values | ForEach-Object {
                     "`"$_`""
                 }) -join ","
             ")]"
-            "`n`t[Parameter(Position=$Pos, ParameterSetName=`"Common`")]"
-            "`n`t[string]`$$($Attribute.DisplayName),`n"
+            "`n$Padding[Parameter(Position=$Pos, ParameterSetName=`"Common`")]"
+            "`n$Padding[string]`$$($Attribute.DisplayName),`n"
             "`n "
             
-            "`n`t[ValidateSet("
+            if ($Attribute.DisplayName -ne $Attribute.SchemaName){
+                "$Padding[alias(`"$($Attribute.SchemaName)`")]"
+            }
+            "`n $Padding[ValidateSet("
             $Pos++
             $Attribute.Options.Keys -join ","
             ")]"
-            "`n`t[Parameter(Position=$Pos, ParameterSetName=`"Common`")]"
-            if ($Attribute.DisplayName -ne $Attribute.SchemaName){
-                "`n`t[alias(`"$($Attribute.SchemaName)`")]"
-            }
-            "`n`t[int]`$$($Attribute.DisplayName)Value,`n"
+            "`n$Padding[Parameter(Position=$Pos, ParameterSetName=`"Common`")]"
+            "`n$Padding[int]`$$($Attribute.DisplayName)Value,`n"
         }
 
         "lookup" {
            
             if ($TemplateType -eq "Get") {
-                "`n`t[Parameter(Position=$Pos, ParameterSetName=`"Common`")]"
-                "`n`t[string]`$$($Attribute.DisplayName),`n"
+                "`n$Padding[Parameter(Position=$Pos, ParameterSetName=`"Common`")]"
+                "`n$Padding[string]`$$($Attribute.DisplayName),`n"
                 "`n "
                 $Pos++
             }
             
             
-            "`n`t[Parameter(Position=$Pos, ParameterSetName=`"Common`")]"
             if ($Attribute.DisplayName -ne $Attribute.SchemaName){
-                "`n`t[alias(`"$($Attribute.SchemaName)`")]"
+                "$Padding[alias(`"$($Attribute.SchemaName)`")]"
             }
-            "`n`t[guid]`$$($Attribute.DisplayName)Id,`n"
+            "`n $Padding[Parameter(Position=$Pos, ParameterSetName=`"Common`")]"
+            "`n$Padding[guid]`$$($Attribute.DisplayName)Id,`n"
+            "`n"
         }
     }
 

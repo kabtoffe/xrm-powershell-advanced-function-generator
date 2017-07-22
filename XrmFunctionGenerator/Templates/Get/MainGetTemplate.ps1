@@ -7,12 +7,10 @@ function Get-$Prefix$EntityDisplayName {
 
         [Parameter(Position=0, ParameterSetName="Guid", Mandatory=`$true, ValueFromPipeline=`$true)]
         [guid]`$$($EntityDisplayName)Id,
-
         $(
             $AttributeValueFromPipeline = $false
             . "$ModuleRootDir\Templates\Common\CommonAttributes.ps1"
         )
-
         [Parameter(Position=999, ParameterSetName="Common")]
         [Parameter(Position=999, ParameterSetName="Guid")]
         [string[]]`$Fields = "*"
