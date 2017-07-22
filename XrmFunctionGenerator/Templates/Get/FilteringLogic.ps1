@@ -13,9 +13,9 @@ foreach ($attribute in $attributes) {
 "@
 }
 
-        "string" {
+        default {
     @"
-    if (![string]::IsNullOrEmpty(`$$($Attribute.DisplayName))){
+    if (`$MyInvocation.BoundParameters.ContainsKey("$($attribute.DisplayName)")){
         `$conditions += [pscustomobject]@{
             "Attribute" = "$($Attribute.SchemaName.ToLower())"
             "Operator" = "eq"

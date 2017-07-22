@@ -17,9 +17,16 @@
 
     )
 
+    $SupportedTypes = "string","picklist","lookup","Double"
+
+    $AttributeToParameterTypeMapping = @{
+        "string" = "string"
+        "Double" = "double"
+    }
+
     $AdditionalProperties.Add("EntityDisplayName",$EntityDisplayName)
     $AdditionalProperties.Add("EntityLogicalName",$EntityLogicalName)
-    $AdditionalProperties.Add("Attributes",[pscustomobject[]]$Attributes)
+    $AdditionalProperties.Add("Attributes",($Attributes | Where-Object { $SupportedTypes -contains $_.AttributeType}))
     $AdditionalProperties.Add("Prefix",$Prefix)
     $AdditionalProperties.Add("TemplateType",$Template)
 

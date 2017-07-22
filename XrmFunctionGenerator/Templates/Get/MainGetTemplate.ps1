@@ -25,21 +25,6 @@ function Get-$Prefix$EntityDisplayName {
         }
 
         default {
-            
-            #Superslow filtering mechanism. To be replaced with a FetchXML-generated version.
-            if (`$Fields -ne "*"){
-            `$AdditionalFieldsToGet = @()
-            
-             $(
-                . "$ModuleRootDir\Templates\Get\FieldsToGetLogic.ps1"
-                
-                
-            )
-
-                `$Fields = (`$Fields + `$AdditionalFieldsToGet) | Select-Object -Unique
-                Write-Verbose (`$Fields -join " ")
-
-            }
 
             $(
                 . "$ModuleRootDir\Templates\Common\ParameterValueLogic.ps1"

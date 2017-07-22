@@ -32,6 +32,11 @@ Describe "Generate-XrmFunction" {
         "DisplayName" = "PrimaryContact"
         "AttributeType" = "Lookup"
         "TargetEntityLogicalName" = "contact"
+    },
+    [PSCustomObject]@{
+        "SchemaName" = "somedouble"
+        "DisplayName" = "ADoubleValue"
+        "AttributeType" = "Double"
     }
     
     
@@ -186,7 +191,10 @@ Describe "Generate-XrmFunction" {
         }
 
         It "Can use Double as parameter" {
-
+            $result = [xml](Get-XrmAccount -ADoubleValue 2.0)
+            $result.fetch.entity.filter.condition.attribute  | Should Be "somedouble"
+            $result.fetch.entity.filter.condition.operator  | Should Be "eq"
+            $result.fetch.entity.filter.condition.value  | Should Be 2
         }
 
         It "Can use DateTime as parameter" {
@@ -479,6 +487,11 @@ Describe "Generate-XrmFunction" {
 
         It "Can be called via pipeline with two objects" {
             $result = $account1,$account2 | Remove-XrmAccount
+            $result[1] | Should Be "account-$AccountGuid2"
+        }
+
+        It "Can be called via pipeline with two fuids" {
+            $result = $accountguid1,$accountguid2 | Remove-XrmAccount
             $result[1] | Should Be "account-$AccountGuid2"
         }
 

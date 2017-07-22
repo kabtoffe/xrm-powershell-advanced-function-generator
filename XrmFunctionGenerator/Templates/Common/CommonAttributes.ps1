@@ -4,12 +4,12 @@ foreach ($attribute in $Attributes){
     
     switch ($attribute.AttributeType){
 
-        "string" {
+        default {
             if ($Attribute.DisplayName -ne $Attribute.SchemaName){
                 "`t[alias(`"$($Attribute.SchemaName)`")]"
             }
             "`n`t[Parameter(Position=$Pos, ParameterSetName=`"Common`", ValueFromPipelineByPropertyName=`$$AttributeValueFromPipeline)]"
-            "`n`t[string]`$$($Attribute.DisplayName),`n"
+            "`n`t[$($AttributeToParameterTypeMapping[$attribute.AttributeType])]`$$($Attribute.DisplayName),`n"
         }
 
         "picklist" {
