@@ -12,13 +12,28 @@ Right now strings, picklists and lookups are supported with more to come. Check 
 To get a nice ordered attribute list to use with this you should probably do it in Excel. But you can use the Xrm.Data-cmdlets and crm metadata like this if you like:
 ```
 $Attributes = Get-CrmEntityAttributes -EntityLogicalName account |
-    Where-Object { "picklist","string" -contains $_.AttributeType } |
-    Select-Object SchemaName,
+    Where-Object { "picklist","string","lookup" -contains $_.AttributeType -and $_.DisplayName.UserLocalizedLabel.Label -ne $null } |
+    Select-Object @{
+            N = "SchemaName"
+            E = { $_.SchemaName.ToLower() }
+        },
         @{
-            "N"="DisplayName"
-            E={ $_.DisplayName.UserLocalizedLabel.Label.Replace(" ","").Replace("/","").Replace("(","").Replace(")","").Replace(":","").Replace("-","") }
+            N= "DisplayName"
+            E= { 
+                
+                #Get rid of extra characters
+                $DisplayName = $_.DisplayName.UserLocalizedLabel.Label.Replace("/","").Replace("(","").Replace(")","").Replace(":","").Replace("-","")
+                $DisplayName = (Get-Culture).TextInfo.ToTitleCase($DisplayName)
+                $DisplayName.Replace(" ","")
+            }
         },
         AttributeType,
+        @{
+            N = "TargetEntityLogicalName"
+            E = {
+                $_.Targets[0]
+            }
+        },
         @{ 
             "N" = "Options" 
             E = {
@@ -29,6 +44,6 @@ $Attributes = Get-CrmEntityAttributes -EntityLogicalName account |
                     }
                 $values
             }
-        } |
-        Where-Object DisplayName -ne $null
+        }
+ "Get","Set","New","Remove" | ForEach-Object { Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName Account -EntityLogicalName account -Attributes $Attributes -Template $_) }
 ```
