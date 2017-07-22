@@ -25,6 +25,18 @@ foreach ($attribute in $attributes) {
 "@
         }
 
+        "DateTime" {
+    @"
+    if (`$MyInvocation.BoundParameters.ContainsKey("$($attribute.DisplayName)")){
+        `$conditions += [pscustomobject]@{
+            "Attribute" = "$($Attribute.SchemaName.ToLower())"
+            "Operator" = "on"
+            "Value" = `$$($Attribute.DisplayName)
+        }
+    }
+"@
+        }
+
 "lookup" {
     @"
     if (![string]::IsNullOrEmpty(`$$($Attribute.DisplayName))){

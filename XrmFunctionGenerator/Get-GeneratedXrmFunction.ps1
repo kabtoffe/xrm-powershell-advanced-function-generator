@@ -17,16 +17,18 @@
 
     )
 
-    $SupportedTypes = "string","picklist","lookup","Double"
-
     $AttributeToParameterTypeMapping = @{
         "string" = "string"
         "Double" = "double"
+        "DateTime" = "DateTime"
+        "Lookup" = "string"
+        "Picklist" = "string"
+        "Money" = "double"
     }
 
     $AdditionalProperties.Add("EntityDisplayName",$EntityDisplayName)
     $AdditionalProperties.Add("EntityLogicalName",$EntityLogicalName)
-    $AdditionalProperties.Add("Attributes",($Attributes | Where-Object { $SupportedTypes -contains $_.AttributeType}))
+    $AdditionalProperties.Add("Attributes",($Attributes | Where-Object { $AttributeToParameterTypeMapping.Keys -contains $_.AttributeType}))
     $AdditionalProperties.Add("Prefix",$Prefix)
     $AdditionalProperties.Add("TemplateType",$Template)
 

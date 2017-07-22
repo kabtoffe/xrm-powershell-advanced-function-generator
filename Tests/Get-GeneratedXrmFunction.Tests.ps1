@@ -37,6 +37,16 @@ Describe "Generate-XrmFunction" {
         "SchemaName" = "somedouble"
         "DisplayName" = "ADoubleValue"
         "AttributeType" = "Double"
+    },
+    [PSCustomObject]@{
+        "SchemaName" = "somedate"
+        "DisplayName" = "ADateValue"
+        "AttributeType" = "DateTime"
+    },
+    [PSCustomObject]@{
+        "SchemaName" = "somemoney"
+        "DisplayName" = "AMoneyValue"
+        "AttributeType" = "Money"
     }
     
     
@@ -136,6 +146,7 @@ Describe "Generate-XrmFunction" {
 
 
         Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Get")
+        Get-GeneratedXrmFunction -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Get" > GetTestFunction.ps1
 
 
         It "Can be called using Guid" {
@@ -198,11 +209,18 @@ Describe "Generate-XrmFunction" {
         }
 
         It "Can use DateTime as parameter" {
-
+            $DateToUse = [DateTime]"1984-11-17"
+            $result = [xml](Get-XrmAccount -ADateValue $DateToUse)
+            $result.fetch.entity.filter.condition.attribute  | Should Be "somedate"
+            $result.fetch.entity.filter.condition.operator  | Should Be "on"
+            $result.fetch.entity.filter.condition.value  | Should Be $DateToUse
         }
 
         It "Can use Money as parameter" {
-
+            $result = [xml](Get-XrmAccount -AMoneyValue 2.0)
+            $result.fetch.entity.filter.condition.attribute  | Should Be "somemoney"
+            $result.fetch.entity.filter.condition.operator  | Should Be "eq"
+            $result.fetch.entity.filter.condition.value  | Should Be 2
         }
 
         It "Can use Boolean as parameter" {
@@ -344,7 +362,8 @@ Describe "Generate-XrmFunction" {
         }
 
         It "Can use Double as parameter" {
-
+            $result = Set-XrmAccount -ADoubleValue 2.0 -AccountId $AccountGuid1
+            $result["somedouble"] | Should Be 2
         }
 
         It "Can use DateTime as parameter" {
@@ -352,7 +371,8 @@ Describe "Generate-XrmFunction" {
         }
 
         It "Can use Money as parameter" {
-
+            $result = Set-XrmAccount -AccountId $AccountGuid1 -AMoneyValue 50
+            $result["somemoney"].Value | Should Be 50
         }
 
         It "Can use Boolean as parameter" {
