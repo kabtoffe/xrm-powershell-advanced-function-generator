@@ -34,6 +34,7 @@ Describe "Generate-XrmFunction" {
         "TargetEntityLogicalName" = "contact"
     }
     
+    
 
     $account1 =  [pscustomobject]@{
             "accountid" = $AccountGuid1
@@ -69,6 +70,65 @@ Describe "Generate-XrmFunction" {
         Mock Get-CrmRecordsByFetch {
             [psobject]@{ "CrmRecords" = $Fetch }
         }
+
+        It "Should fail to generate if there are duplicate display names" {
+             $attributesfail = [PSCustomObject]@{
+                "SchemaName" = "name"
+                "DisplayName" = "Name"
+                "AttributeType" = "string"
+            },
+            [PSCustomObject]@{
+                "SchemaName" = "telephone1"
+                "DisplayName" = "Name"
+                "AttributeType" = "string"
+            },
+            [PSCustomObject]@{
+                "SchemaName" = "customertypecode"
+                "DisplayName" = "CustomerType"
+                "AttributeType" = "Picklist"
+                "Options" = @{
+                    1 = "Competitor"
+                    3 = "Customer"
+                }
+            },
+            [PSCustomObject]@{
+                "SchemaName" = "new_primarycontact"
+                "DisplayName" = "PrimaryContact"
+                "AttributeType" = "Lookup"
+                "TargetEntityLogicalName" = "contact"
+            }
+            { Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "Test" -EntityLogicalName "test" -Attributes $attributesfail -Prefix "Xrm" -Template "Get") } | Should Throw
+        }
+
+        It "Should fail to generate if attributename (alias) matches other field display names" {
+             $attributesfail = [PSCustomObject]@{
+                "SchemaName" = "name"
+                "DisplayName" = "Name"
+                "AttributeType" = "string"
+            },
+            [PSCustomObject]@{
+                "SchemaName" = "telephone1"
+                "DisplayName" = "Telephone"
+                "AttributeType" = "string"
+            },
+            [PSCustomObject]@{
+                "SchemaName" = "telephone"
+                "DisplayName" = "CustomerType"
+                "AttributeType" = "Picklist"
+                "Options" = @{
+                    1 = "Competitor"
+                    3 = "Customer"
+                }
+            },
+            [PSCustomObject]@{
+                "SchemaName" = "new_primarycontact"
+                "DisplayName" = "PrimaryContact"
+                "AttributeType" = "Lookup"
+                "TargetEntityLogicalName" = "contact"
+            }
+            { Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "Test" -EntityLogicalName "test" -Attributes $attributesfail -Prefix "Xrm" -Template "Get") } | Should Throw
+        }
+
 
         Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Get")
 

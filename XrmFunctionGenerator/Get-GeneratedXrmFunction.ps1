@@ -25,6 +25,13 @@
 
     Write-Verbose $AdditionalProperties.ContainsKey("Attributes")
 
+    foreach ($attribute in $attributes) {
+        $otherattributes = $attributes | Where SchemaName -ne $attribute.SchemaName
+        if ($otherattributes.DisplayName -contains $attribute.SchemaName){
+            throw "parameter $($attribute.DisplayName) $($attribute.SchemaName) alias will conflict with another parameter display name"
+        }
+    }
+
     $TemplateToUse = ""
 
     switch ($Template){
