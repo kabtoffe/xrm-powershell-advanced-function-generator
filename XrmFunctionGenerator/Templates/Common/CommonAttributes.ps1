@@ -35,10 +35,11 @@ foreach ($attribute in $Attributes){
 
         "lookup" {
            
-            "`n`t[Parameter(Position=$Pos, ParameterSetName=`"Common`")]"
-            "`n`t[string]`$$($Attribute.DisplayName),`n"
-            "`n "
-            
+            if ($TemplateType -eq "Get") {
+                "`n`t[Parameter(Position=$Pos, ParameterSetName=`"Common`")]"
+                "`n`t[string]`$$($Attribute.DisplayName),`n"
+                "`n "
+            }
             
             $Pos++
             "`n`t[Parameter(Position=$Pos, ParameterSetName=`"Common`")]"

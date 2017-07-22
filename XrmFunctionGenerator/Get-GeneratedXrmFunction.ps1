@@ -21,6 +21,7 @@
     $AdditionalProperties.Add("EntityLogicalName",$EntityLogicalName)
     $AdditionalProperties.Add("Attributes",[pscustomobject[]]$Attributes)
     $AdditionalProperties.Add("Prefix",$Prefix)
+    $AdditionalProperties.Add("TemplateType",$Template)
 
     Write-Verbose $AdditionalProperties.ContainsKey("Attributes")
 

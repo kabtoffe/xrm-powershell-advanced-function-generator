@@ -180,6 +180,10 @@ Describe "Generate-XrmFunction" {
             $result["name"] | Should Be "NewTestAccount"
         }
 
+        It "Should not be able to call Set with lookup record name" {
+            { Set-XrmAccount -AccountId $AccountGuid1 -PrimaryContact "Firstname Lastname" } | Should Throw
+        }
+
         It "Picklist parameters work" {
             $result = Set-XrmAccount -AccountId $AccountGuid1 -CustomerType Competitor
             $result["customertypecode"].Value | Should Be 1

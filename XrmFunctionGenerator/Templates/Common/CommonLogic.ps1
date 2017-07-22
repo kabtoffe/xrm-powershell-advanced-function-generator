@@ -10,6 +10,12 @@ foreach ($attribute in $Attributes){
             "`n`t}"
         }
 
+        "lookup" {
+            "`n`tif (![string]::IsNullOrEmpty(`$$($Attribute.DisplayName)Id)){"
+            "`n`t`t`$FieldsToSend.Add(`"$($attribute.SchemaName.ToLower())`",(New-CrmEntityReference -EntityLogicalName $($attribute.TargetEntityLogicalName) -Id `$$($attribute.DisplayName)Id))"
+            "`n`t}"
+        }
+
         default {
             "`n`tif (![string]::IsNullOrEmpty(`$$($Attribute.DisplayName))){"
             "`n`t`t`$FieldsToSend.Add(`"$($attribute.SchemaName.ToLower())`",`$$($attribute.DisplayName))"
