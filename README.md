@@ -9,7 +9,7 @@ Right now strings, picklists and lookups are supported with more to come. Check 
 - Set-XrmAccount
 - Remove-XrmAccount
 
-To get a nice ordered attribute list to use with this you should probably do it in Excel. But you can use the Xrm.Data-cmdlets and crm metadata like this if you like:
+To get a nice ordered attribute list to use with this you should probably do it in Excel. But you can use the Xrm.Data-cmdlets and crm metadata like this if you like. If you run into duplicate displaynames you need to filter those our. Might be easier to just filter to the attributes you actually need.
 ```
 $Attributes = Get-CrmEntityAttributes -EntityLogicalName account |
     Where-Object { "picklist","string","lookup" -contains $_.AttributeType -and $_.DisplayName.UserLocalizedLabel.Label -ne $null } |
