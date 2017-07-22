@@ -139,6 +139,11 @@ Describe "Generate-XrmFunction" {
             $Global:GetCrmRecordCalled | Should Be 1
         }
 
+        It "Can be called using Guid via pipeline" {
+            $result = $AccountGuid1 | Get-XrmAccount
+            $result.accountid | Should Be $AccountGuid1
+        }
+
         
 
         It "Can be called using query" {
@@ -180,6 +185,49 @@ Describe "Generate-XrmFunction" {
             $result.fetch.entity.filter.condition.value  | Should Be $ContactId.ToString()
         }
 
+        It "Can use Double as parameter" {
+
+        }
+
+        It "Can use DateTime as parameter" {
+
+        }
+
+        It "Can use Money as parameter" {
+
+        }
+
+        It "Can use Boolean as parameter" {
+
+        }
+
+        It "Can use Integer as parameter" {
+            
+        }
+        
+        It "Can use Decimal as parameter" {
+            
+        }
+
+        It "Can use Status as parameter" {
+            
+        }
+
+        It "Can use Memo as parameter" {
+            
+        }
+
+        It "Can use BigInt as parameter" {
+            
+        }
+
+        It "Can use Owner as parameter" {
+            
+        }
+
+        It "Can use State as parameter" {
+            
+        }
 
 
         It "If Fields is not provided get all fields" {
@@ -254,6 +302,11 @@ Describe "Generate-XrmFunction" {
             $result["customertypecode"].Value | Should Be 3
         }
 
+        It "Take guid as pipeline input"{
+            $result = $AccountGuid1 | Set-XrmAccount -CustomerType Customer
+            $result["customertypecode"].Value | Should Be 3
+        }
+
         It "Can be called via pipeline with two objects" {
             $account1,$account2 | Set-XrmAccount -CustomerType Customer  | ForEach-Object {
                 $_["customertypecode"].Value | Should Be 3
@@ -282,11 +335,58 @@ Describe "Generate-XrmFunction" {
             $result["customertypecode"].Value | Should Be 3
         }
 
+        It "Can use Double as parameter" {
+
+        }
+
+        It "Can use DateTime as parameter" {
+
+        }
+
+        It "Can use Money as parameter" {
+
+        }
+
+        It "Can use Boolean as parameter" {
+
+        }
+
+        It "Can use Integer as parameter" {
+            
+        }
+        
+        It "Can use Decimal as parameter" {
+            
+        }
+
+        It "Can use Status as parameter" {
+            
+        }
+
+        It "Can use Memo as parameter" {
+            
+        }
+
+        It "Can use BigInt as parameter" {
+            
+        }
+
+        It "Can use Owner as parameter" {
+            
+        }
+
+        It "Can use State as parameter" {
+            
+        }
+
+
         It "Can use lookup value as parameter" {
             $result = Set-XrmAccount -PrimaryContactId $ContactId -AccountId $AccountGuid1
             $result["new_primarycontact"].Id | Should Be $ContactId
             $result["new_primarycontact"].LogicalName | Should Be "contact"
         }
+
+
 
         It "Should fail when picklist value provided by two parameters" {
            { Set-XrmAccount -CustomerTypeValue 3 -CustomerType "Competitor" -AccountId $AccountGuid1 } | Should Throw
@@ -301,6 +401,8 @@ Describe "Generate-XrmFunction" {
             $result = Set-XrmAccount -AccountId $AccountGuid1 -customertypecode 1
             $result["customertypecode"].Value | Should Be 1
         }
+
+        
 
         It "Providing field via both parameters and Fields should fail"  {
             { $account1 | Set-XrmAccount -Name "OtherCustomName" -Fields @{ "name" = "NewCustomName" } } | Should Throw
@@ -329,7 +431,7 @@ Describe "Generate-XrmFunction" {
 
         It "Can be called" {
             New-XrmAccount
-        }
+        } 
 
         It "String parameters work" {
             $result = New-XrmAccount  -Name "NewTestAccount"
@@ -345,7 +447,6 @@ Describe "Generate-XrmFunction" {
             $result = [pscustomobject]@{ "Name" = "New account"  } | New-XrmAccount
             $result["name"] | Should Be "New account"
         }
-
 
         It "Can accept two new object from pipeline" {
             $result = [pscustomobject]@{ "Name" = "New account"  },[pscustomobject]@{ "Name" = "New account2"  } | New-XrmAccount
@@ -368,6 +469,11 @@ Describe "Generate-XrmFunction" {
 
         It "Can be called via pipeline with one object" {
             $result = $account1 | Remove-XrmAccount
+            $result | Should Be "account-$AccountGuid1"
+        }
+
+        It "Can accept guid from pipeline" {
+            $result = $AccountGuid1| Remove-XrmAccount
             $result | Should Be "account-$AccountGuid1"
         }
 

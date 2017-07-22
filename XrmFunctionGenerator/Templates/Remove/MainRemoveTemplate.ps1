@@ -11,7 +11,7 @@ function Remove-$Prefix$EntityDisplayName {
             "`t[alias(`"$($EntityLogicalName)id`")]"
         }
     )
-    [Parameter(Position=0, Mandatory=`$true, ValueFromPipelineByPropertyName=`$true)]
+    [Parameter(Position=0, Mandatory=`$true, ValueFromPipelineByPropertyName=`$true, ValueFromPipeline=`$true)]
     [guid]`$$($EntityDisplayName)Id
 
     )

@@ -13,7 +13,7 @@ function Set-$Prefix$EntityDisplayName {
                 "`t[alias(`"$($EntityLogicalName)id`")]"
             }
         )
-        [Parameter(Position=0, ParameterSetName="Common", Mandatory=`$true, ValueFromPipelineByPropertyName=`$true)]
+        [Parameter(Position=0, ParameterSetName="Common", Mandatory=`$true, ValueFromPipelineByPropertyName=`$true, ValueFromPipeline=`$true)]
         [guid]`$$($EntityDisplayName)Id,
 
         $(

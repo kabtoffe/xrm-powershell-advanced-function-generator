@@ -5,7 +5,7 @@ function Get-$Prefix$EntityDisplayName {
 
     param(
 
-        [Parameter(Position=0, ParameterSetName="Guid", Mandatory=`$true)]
+        [Parameter(Position=0, ParameterSetName="Guid", Mandatory=`$true, ValueFromPipeline=`$true)]
         [guid]`$$($EntityDisplayName)Id,
 
         $(
