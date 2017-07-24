@@ -1,5 +1,5 @@
 $Attributes = Get-CrmEntityAttributes -EntityLogicalName account |
-    Where-Object { "picklist","string","lookup" -contains $_.AttributeType -and $_.DisplayName.UserLocalizedLabel.Label -ne $null } |
+    Where-Object { "picklist","string","lookup","double","datetime","money","integer","bigint","decimal","boolean","memo" -contains $_.AttributeType -and $_.DisplayName.UserLocalizedLabel.Label -ne $null } |
     Select-Object @{
             N = "SchemaName"
             E = { $_.SchemaName.ToLower() }
@@ -14,7 +14,10 @@ $Attributes = Get-CrmEntityAttributes -EntityLogicalName account |
                 $DisplayName.Replace(" ","")
             }
         },
-        AttributeType,
+        @{
+            N = "AttributeType"
+            E = { $_.AttributeType.ToString()  }
+        },
         @{
             N = "TargetEntityLogicalName"
             E = {
