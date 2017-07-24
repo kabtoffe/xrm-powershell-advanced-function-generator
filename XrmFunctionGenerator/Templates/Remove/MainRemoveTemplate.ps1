@@ -5,14 +5,13 @@ function Remove-$Prefix$EntityDisplayName {
     [CmdletBinding()]
 
     param(
-
     $(
         if ($EntityLogicalName -ne $EntityDisplayName){
-            "`t[alias(`"$($EntityLogicalName)id`")]"
+            "`t `t[alias(`"$($EntityLogicalName)id`")]"
         }
     )
-    [Parameter(Position=0, Mandatory=`$true, ValueFromPipelineByPropertyName=`$true, ValueFromPipeline=`$true)]
-    [guid]`$$($EntityDisplayName)Id
+        [Parameter(Position=0, Mandatory=`$true, ValueFromPipelineByPropertyName=`$true, ValueFromPipeline=`$true)]
+        [guid]`$$($EntityDisplayName)Id
 
     )
 

@@ -29,7 +29,7 @@ function New-$Prefix$EntityDisplayName {
             `$FieldsToSend.Add(`$_,`$Fields[`$_])
         }
 
-        $(
+$(
             . "$ModuleRootDir\Templates\NewSet\CommonLogic.ps1"
         )
 

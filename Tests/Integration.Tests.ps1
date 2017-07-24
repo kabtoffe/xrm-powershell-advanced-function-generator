@@ -48,7 +48,7 @@ Describe "Test function genereration and use against CRM instance" {
 
     
     "Get","Set","New","Remove" | ForEach-Object { Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName Account -EntityLogicalName account -Attributes $Attributes -Template $_) }
-    "Get","Set","New","Remove" | ForEach-Object { Get-GeneratedXrmFunction -EntityDisplayName Account -EntityLogicalName account -Attributes $Attributes -Template $_ > "$_-Account.ps1" }
+    "Get","Set","New","Remove" | ForEach-Object { Get-GeneratedXrmFunction -EntityDisplayName Account -EntityLogicalName account -Attributes $Attributes -Template $_ > ".\GeneratedFunctions\$_-Account.ps1" }
     
     It "Get-XrmAccount exists" {
         Get-Command Get-XrmAccount | Should Not Be $null
