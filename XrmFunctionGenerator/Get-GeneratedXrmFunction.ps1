@@ -23,6 +23,7 @@
         "Picklist" = "string"
         "Money" = "double"
         "Integer" = "int"
+        "BigInt" = "bigint"
         "Boolean" = "bool"
         "Memo" = "string"
     }

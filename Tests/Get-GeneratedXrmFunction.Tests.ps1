@@ -66,9 +66,12 @@ Describe "Generate-XrmFunction" {
         "SchemaName" = "description"
         "DisplayName" = "Description"
         "AttributeType" = "Memo"
+    },
+    [PSCustomObject]@{
+        "SchemaName" = "somebigint"
+        "DisplayName" = "ABigInt"
+        "AttributeType" = "BigInt"
     }
-    
-    
 
     $account1 =  [pscustomobject]@{
             "accountid" = $AccountGuid1
@@ -262,7 +265,7 @@ Describe "Generate-XrmFunction" {
             $result.fetch.entity.filter.condition.operator  | Should Be "eq"
             $result.fetch.entity.filter.condition.value  | Should Be 2
         }
-        
+
         It "Can use Decimal as parameter" {
             
         }
@@ -279,7 +282,10 @@ Describe "Generate-XrmFunction" {
         }
 
         It "Can use BigInt as parameter" {
-            
+            $result = [xml](Get-XrmAccount -ABigInt 2)
+            $result.fetch.entity.filter.condition.attribute  | Should Be "somebigint"
+            $result.fetch.entity.filter.condition.operator  | Should Be "eq"
+            $result.fetch.entity.filter.condition.value  | Should Be 2
         }
 
         It "Can use Owner as parameter" {
@@ -441,7 +447,8 @@ Describe "Generate-XrmFunction" {
         }
 
         It "Can use BigInt as parameter" {
-            
+            $result = Set-XrmAccount -AccountId $AccountGuid1 -ABigInt 2
+            $result["somebigint"] | Should Be 2
         }
 
         It "Can use Owner as parameter" {
