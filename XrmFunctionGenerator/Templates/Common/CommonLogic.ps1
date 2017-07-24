@@ -1,4 +1,6 @@
-. "$ModuleRootDir\Templates\Common\ParameterValueLogic.ps1"
+foreach ($attribute in $Attributes | Where-Object AttributeType -eq "Picklist"){
+    Invoke-Template -Template (Get-Content -Raw "$ModuleRootDir\Templates\Common\PicklistValueTemplate.ps1") -TemplateModel $attribute
+}
 
 foreach ($attribute in $Attributes){
 
