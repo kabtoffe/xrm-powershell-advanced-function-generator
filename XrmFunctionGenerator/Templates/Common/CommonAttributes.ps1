@@ -18,7 +18,7 @@ foreach ($attribute in $Attributes){
         "picklist" {
             
             Invoke-Template -Template $PicklistParameterTemplate -TemplateModel $attribute | Add-Indentation -Steps 2
-            
+            $Pos++
         }
 
         "lookup" {
