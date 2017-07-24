@@ -3,11 +3,11 @@ if (`$MyInvocation.BoundParameters.ContainsKey("$DisplayName") -and `$MyInvocati
 }
 
 switch (`$$DisplayName){
-                $(
-                    foreach ($OptionKey in $Options.Keys){
-                        "`n`t`"$($Options[$OptionKey])`" { `$$($DisplayName)Value = $OptionKey }"
-                    }
-                )
+$(
+    foreach ($OptionKey in $Options.Keys){
+        "`n`t`t`t`"$($Options[$OptionKey])`" { `$$($DisplayName)Value = $OptionKey }"
+    }
+)
     default {
         #Let's not change potentially provided specific value
     }

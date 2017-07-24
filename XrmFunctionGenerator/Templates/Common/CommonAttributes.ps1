@@ -9,25 +9,35 @@ foreach ($attribute in $Attributes){
 
         default {
             
-            Invoke-Template -Template (Get-Content -Raw "$ModuleRootDir\Templates\Common\DefaultParameterTemplate.ps1") -TemplateModel $attribute 
+            Get-IndentedString -Steps 2 -StringToIndent (
+                Invoke-Template -Template $DefaultParameterTemplate -TemplateModel $attribute
+            )
+            
             
         }
 
         "picklist" {
-            Invoke-Template -Template (Get-Content -Raw "$ModuleRootDir\Templates\Common\PicklistParameterTemplate.ps1") -TemplateModel $attribute 
+            Get-IndentedString -Steps 2 -StringToIndent (
+                Invoke-Template -Template $PicklistParameterTemplate -TemplateModel $attribute
+            )
         }
 
         "lookup" {
            
             if ($TemplateType -eq "Get") {
-                Invoke-Template -Template (Get-Content -Raw "$ModuleRootDir\Templates\Common\LookupParameterTemplateGet.ps1") -TemplateModel $attribute 
+                Get-IndentedString -Steps 2 -StringToIndent (
+                    Invoke-Template -Template $LookupParameterTemplateGet -TemplateModel $attribute 
+                )
+                "`n`n "
                 $Pos++
             }
             
-            Invoke-Template -Template (Get-Content -Raw "$ModuleRootDir\Templates\Common\LookupParameterTemplate.ps1") -TemplateModel $attribute 
+            Get-IndentedString -Steps 2 -StringToIndent (
+                Invoke-Template -Template $LookupParameterTemplate -TemplateModel $attribute
+            )
            
         }
     }
-
+    "`n`n "
     $Pos++
 }

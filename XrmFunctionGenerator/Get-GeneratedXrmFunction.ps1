@@ -11,9 +11,7 @@
 
         [string]$Template,
 
-        [string]$Prefix="Xrm",
-
-        [hashtable]$AdditionalProperties=@{}
+        [string]$Prefix="Xrm"
 
     )
 
@@ -26,13 +24,20 @@
         "Money" = "double"
     }
 
-    $AdditionalProperties.Add("EntityDisplayName",$EntityDisplayName)
-    $AdditionalProperties.Add("EntityLogicalName",$EntityLogicalName)
-    $AdditionalProperties.Add("Attributes",($Attributes | Where-Object { $AttributeToParameterTypeMapping.Keys -contains $_.AttributeType}))
-    $AdditionalProperties.Add("Prefix",$Prefix)
-    $AdditionalProperties.Add("TemplateType",$Template)
+    $TemplateData = @{
+        "EntityDisplayName" = $EntityDisplayName
+        "EntityLogicalName" = $EntityLogicalName
+        "Attributes" = ($Attributes | Where-Object { $AttributeToParameterTypeMapping.Keys -contains $_.AttributeType})
+        "Prefix" = $Prefix
+        "TemplateType" = $Template
+        "DefaultParameterTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Common\DefaultParameterTemplate.ps1")
+        "PicklistParameterTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Common\PicklistParameterTemplate.ps1")
+        "LookupParameterTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Common\LookupParameterTemplate.ps1")
+        "LookupParameterTemplateGet" = (Get-Content -Raw "$ModuleRootDir\Templates\Common\LookupParameterTemplateGet.ps1")
+        "PicklistValueTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Common\PicklistValueTemplate.ps1")
+    }
 
-    Write-Verbose $AdditionalProperties.ContainsKey("Attributes")
+    #Write-Verbose $TemplateData.ContainsKey("Attributes")
 
     foreach ($attribute in $attributes) {
         $otherattributes = $attributes | Where-Object SchemaName -ne $attribute.SchemaName
@@ -66,5 +71,5 @@
         }
     }
 
-    Invoke-Template -Template $TemplateToUse -TemplateData $AdditionalProperties
+    Invoke-Template -Template $TemplateToUse -TemplateData $TemplateData
 }

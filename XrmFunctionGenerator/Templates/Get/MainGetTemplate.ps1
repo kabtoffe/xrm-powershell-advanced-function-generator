@@ -28,7 +28,9 @@ function Get-$Prefix$EntityDisplayName {
                 $Padding = "`t`t`t"
                 
                 foreach ($attribute in $Attributes | Where-Object AttributeType -eq "Picklist"){
-                    Invoke-Template -Template (Get-Content -Raw "$ModuleRootDir\Templates\Common\PicklistValueTemplate.ps1") -TemplateModel $attribute
+                    Get-IndentedString -Step 2 -StringToIndent (
+                        Invoke-Template -Template $PicklistvalueTemplate -TemplateModel $attribute
+                    )
                 }
                 
             )
