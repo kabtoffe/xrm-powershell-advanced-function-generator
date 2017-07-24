@@ -58,6 +58,11 @@ Describe "Test function genereration and use against CRM instance" {
             "`$true" = "Denied"
             "`$false" = "Allowed"
         }
+    },
+    [PSCustomObject]@{
+        "SchemaName" = "description"
+        "DisplayName" = "Description"
+        "AttributeType" = "Memo"
     }
 
     
@@ -138,6 +143,12 @@ Describe "Test function genereration and use against CRM instance" {
         $global:AccountRecord.donotemail_Property.Value | Should Be $true
     }
 
+    It "Can update Memo-value" {
+        $global:AccountId | Set-XrmAccount -Description "Description"
+        $global:AccountRecord = Get-XrmAccount -AccountId $global:AccountId -Fields "description"
+        $global:AccountRecord.description | Should Be "Description"
+    }
+
     It "Can update DateTime-value" {
 
     }
@@ -179,6 +190,11 @@ Describe "Test function genereration and use against CRM instance" {
 
     It "Can query Boolean-value with label" {
         $Accounts = Get-XrmAccount -DoNotEmail "Denied" -Fields "accountid"
+        $Accounts.accountid -contains $global:AccountId | Should Be $true
+    }
+
+    It "Can query Memo-value"{
+        $Accounts = Get-XrmAccount -Description "Description" -Fields "accountid"
         $Accounts.accountid -contains $global:AccountId | Should Be $true
     }
 

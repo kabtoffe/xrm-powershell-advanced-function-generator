@@ -24,6 +24,7 @@
         "Money" = "double"
         "Integer" = "int"
         "Boolean" = "bool"
+        "Memo" = "string"
     }
 
     $TemplateData = @{

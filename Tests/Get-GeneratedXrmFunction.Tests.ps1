@@ -61,6 +61,11 @@ Describe "Generate-XrmFunction" {
             "`$true" = "Denied"
             "`$false" = "Allowed"
         }
+    },
+    [PSCustomObject]@{
+        "SchemaName" = "description"
+        "DisplayName" = "Description"
+        "AttributeType" = "Memo"
     }
     
     
@@ -267,7 +272,10 @@ Describe "Generate-XrmFunction" {
         }
 
         It "Can use Memo as parameter" {
-            
+            $result = [xml](Get-XrmAccount -Description "This is a description")
+            $result.fetch.entity.filter.condition.attribute  | Should Be "description"
+            $result.fetch.entity.filter.condition.operator  | Should Be "eq"
+            $result.fetch.entity.filter.condition.value  | Should Be "This is a description"
         }
 
         It "Can use BigInt as parameter" {
@@ -428,7 +436,8 @@ Describe "Generate-XrmFunction" {
         }
 
         It "Can use Memo as parameter" {
-            
+            $result = Set-XrmAccount -AccountId $AccountGuid1 -Description "This is a description"
+            $result["description"] | Should Be "This is a description"
         }
 
         It "Can use BigInt as parameter" {
