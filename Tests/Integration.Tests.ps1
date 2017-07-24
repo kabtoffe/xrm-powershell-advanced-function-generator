@@ -149,6 +149,14 @@ Describe "Test function genereration and use against CRM instance" {
         $global:AccountRecord.description | Should Be "Description"
     }
 
+    It "Can update BigInt-value"{
+
+    }
+
+    It "Can update Decimal-value" {
+
+    }
+
     It "Can update DateTime-value" {
 
     }
@@ -196,6 +204,14 @@ Describe "Test function genereration and use against CRM instance" {
     It "Can query Memo-value"{
         $Accounts = Get-XrmAccount -Description "Description" -Fields "accountid"
         $Accounts.accountid -contains $global:AccountId | Should Be $true
+    }
+
+    It "Can query BigInt-value" {
+
+    }
+
+    It "Can query Decimal-value"{
+
     }
 
     It "Can query multiple fields" {

@@ -71,6 +71,11 @@ Describe "Generate-XrmFunction" {
         "SchemaName" = "somebigint"
         "DisplayName" = "ABigInt"
         "AttributeType" = "BigInt"
+    },
+    [PSCustomObject]@{
+        "SchemaName" = "somedecimal"
+        "DisplayName" = "ADecimal"
+        "AttributeType" = "Decimal"
     }
 
     $account1 =  [pscustomobject]@{
@@ -267,7 +272,10 @@ Describe "Generate-XrmFunction" {
         }
 
         It "Can use Decimal as parameter" {
-            
+            $result = [xml](Get-XrmAccount -ADecimal 2.0)
+            $result.fetch.entity.filter.condition.attribute  | Should Be "somedecimal"
+            $result.fetch.entity.filter.condition.operator  | Should Be "eq"
+            $result.fetch.entity.filter.condition.value  | Should Be 2
         }
 
         It "Can use Status as parameter" {
@@ -434,7 +442,8 @@ Describe "Generate-XrmFunction" {
         }
         
         It "Can use Decimal as parameter" {
-            
+            $result = Set-XrmAccount -ADecimal 2.0 -AccountId $AccountGuid1
+            $result["somedecimal"] | Should Be 2
         }
 
         It "Can use Status as parameter" {

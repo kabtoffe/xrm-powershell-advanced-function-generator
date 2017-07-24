@@ -24,6 +24,7 @@
         "Money" = "double"
         "Integer" = "int"
         "BigInt" = "bigint"
+        "Decimal" = "decimal"
         "Boolean" = "bool"
         "Memo" = "string"
     }
