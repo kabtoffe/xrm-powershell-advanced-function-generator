@@ -17,4 +17,5 @@ foreach ($attribute in $attributes) {
             Invoke-Template -Template $LookupFilterTemplate -TemplateModel $attribute | Add-Indentation -Steps 2
         }
     }
+    "`n"
 }
