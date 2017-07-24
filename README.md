@@ -3,47 +3,25 @@
 
 The idea is to generate poweruser tools for use with Dynamics 365 Customer Engagement (CRM). The cmdlets that the Microsoft.Xrm.Data.PowerShell-module provides are fine for static scripts but not for "day-to-day" stuff as the are quite verbose. This project is all about generating easy to use commands that "just work". You can obviously use these in your scripts as well.
 
-Right now strings, picklists and lookups are supported with more to come. Check the test file to see examples on how to call the generator and how to use resulting functions. There are templates for Get, New, Set and Remove -verbs. Eg. generating all four for Account would result in these functions:
+Right now  the following attribute types are supported:
+- string
+- Double
+- DateTime
+- Lookup
+- Picklist
+- Money
+- Integer
+- BigInt
+- Decimal
+- Boolean
+- Memo
+
+Check the test file to see examples on how to call the generator and how to use resulting functions. There are templates for Get, New, Set and Remove -verbs. Eg. generating all four for Account would result in these functions:
 - Get-XrmAccount
 - New-XrmAccount
 - Set-XrmAccount
 - Remove-XrmAccount
+ 
+ Stubs of these can be found Tests\GeneratedFunctions-folder.
 
-To get a nice ordered attribute list to use with this you should probably do it in Excel. But you can use the Xrm.Data-cmdlets and crm metadata like this if you like. If you run into duplicate displaynames you need to filter those our. Might be easier to just filter to the attributes you actually need.
-```
-$Attributes = Get-CrmEntityAttributes -EntityLogicalName account |
-    Where-Object { "picklist","string","lookup" -contains $_.AttributeType -and $_.DisplayName.UserLocalizedLabel.Label -ne $null } |
-    Select-Object @{
-            N = "SchemaName"
-            E = { $_.SchemaName.ToLower() }
-        },
-        @{
-            N= "DisplayName"
-            E= { 
-                
-                #Get rid of extra characters
-                $DisplayName = $_.DisplayName.UserLocalizedLabel.Label.Replace("/","").Replace("(","").Replace(")","").Replace(":","").Replace("-","")
-                $DisplayName = (Get-Culture).TextInfo.ToTitleCase($DisplayName)
-                $DisplayName.Replace(" ","")
-            }
-        },
-        AttributeType,
-        @{
-            N = "TargetEntityLogicalName"
-            E = {
-                $_.Targets[0]
-            }
-        },
-        @{ 
-            "N" = "Options" 
-            E = {
-                $values = @{}
-                $_.OptionSet.Options |
-                    ForEach-Object {
-                        $values.Add($_.Value,$_.Label.UserLocalizedLabel.Label)
-                    }
-                $values
-            }
-        }
- "Get","Set","New","Remove" | ForEach-Object { Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName Account -EntityLogicalName account -Attributes $Attributes -Template $_) }
-```
+To get a nice ordered attribute list to use with this you should probably do it in Excel. But you can use the Xrm.Data-cmdlets and crm metadata like this if you like ([example here](https://github.com/kabtoffe/xrm-powershell-advanced-function-generator/blob/master/Examples/GenerateFunctions.ps1)). If you run into duplicate display names you need to filter those out. Might be easier to just filter to the attributes you actually need.
