@@ -39,10 +39,16 @@ Describe "Test function genereration and use against CRM instance" {
         "SchemaName" = "address1_latitude"
         "DisplayName" = "Latitude"
         "AttributeType" = "Double"
+    },
+    [PSCustomObject]@{
+        "SchemaName" = "creditlimit"
+        "DisplayName" = "CreditLimit"
+        "AttributeType" = "Money"
     }
 
     
     "Get","Set","New","Remove" | ForEach-Object { Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName Account -EntityLogicalName account -Attributes $Attributes -Template $_) }
+    "Get","Set","New","Remove" | ForEach-Object { Get-GeneratedXrmFunction -EntityDisplayName Account -EntityLogicalName account -Attributes $Attributes -Template $_ > "$_-Account.ps1" }
     
     It "Get-XrmAccount exists" {
         Get-Command Get-XrmAccount | Should Not Be $null
@@ -94,6 +100,12 @@ Describe "Test function genereration and use against CRM instance" {
         $global:AccountRecord.address1_latitude_Property.Value | Should Be 2.00
     }
 
+    It "Can update Money-value" {
+        $global:AccountId | Set-XrmAccount -CreditLimit 40000
+        $global:AccountRecord = Get-XrmAccount -AccountId $global:AccountId
+        $global:AccountRecord.creditlimit_Property.Value.Value | Should Be 40000
+    }
+
     It "Can update DateTime-value" {
 
     }
@@ -115,6 +127,11 @@ Describe "Test function genereration and use against CRM instance" {
 
     It "Can query DateTime-value" {
         $Accounts = Get-XrmAccount -Created ([DateTime]::Today)
+        $Accounts.accountid -contains $global:AccountId | Should Be $true
+    }
+
+     It "Can query Money-value" {
+        $Accounts = Get-XrmAccount -CreditLimit 40000
         $Accounts.accountid -contains $global:AccountId | Should Be $true
     }
 
