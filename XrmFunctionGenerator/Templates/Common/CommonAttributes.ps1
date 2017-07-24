@@ -9,52 +9,23 @@ foreach ($attribute in $Attributes){
 
         default {
             
-            if ($Attribute.DisplayName -ne $Attribute.SchemaName){
-                "$Padding[alias(`"$($Attribute.SchemaName)`")]"
-            }
-            "`n$Padding[Parameter(Position=$Pos, ParameterSetName=`"Common`", ValueFromPipelineByPropertyName=`$$AttributeValueFromPipeline)]"
-            "`n$Padding[$($AttributeToParameterTypeMapping[$attribute.AttributeType])]`$$($Attribute.DisplayName),`n"
-            "`n"
+            Invoke-Template -Template (Get-Content -Raw "$ModuleRootDir\Templates\Common\DefaultParameterTemplate.ps1") -TemplateModel $attribute 
             
         }
 
         "picklist" {
-            "$Padding[ValidateSet("
-            ($Attribute.Options.Values | ForEach-Object {
-                    "`"$_`""
-                }) -join ","
-            ")]"
-            "`n$Padding[Parameter(Position=$Pos, ParameterSetName=`"Common`")]"
-            "`n$Padding[string]`$$($Attribute.DisplayName),`n"
-            "`n "
-            
-            if ($Attribute.DisplayName -ne $Attribute.SchemaName){
-                "$Padding[alias(`"$($Attribute.SchemaName)`")]"
-            }
-            "`n $Padding[ValidateSet("
-            $Pos++
-            $Attribute.Options.Keys -join ","
-            ")]"
-            "`n$Padding[Parameter(Position=$Pos, ParameterSetName=`"Common`")]"
-            "`n$Padding[int]`$$($Attribute.DisplayName)Value,`n"
+            Invoke-Template -Template (Get-Content -Raw "$ModuleRootDir\Templates\Common\PicklistParameterTemplate.ps1") -TemplateModel $attribute 
         }
 
         "lookup" {
            
             if ($TemplateType -eq "Get") {
-                "`n$Padding[Parameter(Position=$Pos, ParameterSetName=`"Common`")]"
-                "`n$Padding[string]`$$($Attribute.DisplayName),`n"
-                
+                Invoke-Template -Template (Get-Content -Raw "$ModuleRootDir\Templates\Common\LookupParameterTemplateGet.ps1") -TemplateModel $attribute 
                 $Pos++
             }
-            "`n "
             
-            if ($Attribute.DisplayName -ne $Attribute.SchemaName){
-                "$Padding[alias(`"$($Attribute.SchemaName)`")]"
-            }
-            "`n $Padding[Parameter(Position=$Pos, ParameterSetName=`"Common`")]"
-            "`n$Padding[guid]`$$($Attribute.DisplayName)Id,`n"
-            "`n"
+            Invoke-Template -Template (Get-Content -Raw "$ModuleRootDir\Templates\Common\LookupParameterTemplate.ps1") -TemplateModel $attribute 
+           
         }
     }
 

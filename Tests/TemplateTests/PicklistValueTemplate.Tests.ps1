@@ -7,9 +7,11 @@ Describe "Testing PicklistValueTemplate"{
         1 = "Customer"
         3 = "Competitor"
     }
+    $Pos = 1
+    $AttributeValueFromPipeline = $true
 
     It "Template runs" {
-        Invoke-Expression $Template
+        Invoke-Expression $Template 
         Invoke-Expression (Invoke-Expression $Template)
     }
 

@@ -316,6 +316,7 @@ Describe "Generate-XrmFunction" {
         }
 
         It "Should not be able to call Set with lookup record name" {
+            (get-command Set-XrmAccount).Parameters.ContainsKey("PrimaryContact") | Should Be $false
             { Set-XrmAccount -AccountId $AccountGuid1 -PrimaryContact "Firstname Lastname" } | Should Throw
         }
 
@@ -409,13 +410,11 @@ Describe "Generate-XrmFunction" {
         }
 
 
-        It "Can use lookup value as parameter" {
+        It "Can use lookup id as parameter" {
             $result = Set-XrmAccount -PrimaryContactId $ContactId -AccountId $AccountGuid1
             $result["new_primarycontact"].Id | Should Be $ContactId
             $result["new_primarycontact"].LogicalName | Should Be "contact"
         }
-
-
 
         It "Should fail when picklist value provided by two parameters" {
            { Set-XrmAccount -CustomerTypeValue 3 -CustomerType "Competitor" -AccountId $AccountGuid1 } | Should Throw
