@@ -36,7 +36,7 @@ $(
 
             `$conditions = @()
 
-            $(
+$(
                 . "$ModuleRootDir\Templates\Get\FilteringLogic.ps1"
             )
 
