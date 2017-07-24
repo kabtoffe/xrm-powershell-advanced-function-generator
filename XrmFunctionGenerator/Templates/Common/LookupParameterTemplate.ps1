@@ -1,5 +1,5 @@
 $(
-if ($DisplayName -ne $SchemaName){
+if ("$($DisplayName)Id" -ne $SchemaName){
     "[alias(`"$($SchemaName)`")]"
 }
 )
