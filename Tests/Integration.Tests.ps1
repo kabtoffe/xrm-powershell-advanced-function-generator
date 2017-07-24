@@ -146,7 +146,7 @@ Describe "Test function genereration and use against CRM instance" {
         $Accounts.accountid -contains $global:AccountId | Should Be $true
     }
 
-    It "Can query Money-value" {
+    It "Can query Integer-value" {
         $Accounts = Get-XrmAccount -UtcOffset 2
         $Accounts.accountid -contains $global:AccountId | Should Be $true
     }
