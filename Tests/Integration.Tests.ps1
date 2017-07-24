@@ -135,6 +135,11 @@ Describe "Test function genereration and use against CRM instance" {
         $Accounts.accountid -contains $global:AccountId | Should Be $true
     }
 
+    It "Can query multiple fields" {
+        $Accounts = Get-XrmAccount -CreditLimit 40000 -Created ([DateTime]::Today) -Latitude 2.0 -ParentAccountId $global:ParentAccountId -CustomerType Customer
+        $Accounts.accountid -contains $global:AccountId | Should Be $true
+    }
+
     It "Can remove record" {
         $global:AccountId | Remove-XrmAccount
         $global:ParentAccountId | Remove-XrmAccount
