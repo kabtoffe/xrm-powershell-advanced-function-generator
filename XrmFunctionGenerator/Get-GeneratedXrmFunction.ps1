@@ -22,6 +22,7 @@
         "Lookup" = "string"
         "Picklist" = "string"
         "Money" = "double"
+        "Integer" = "int"
     }
 
     $TemplateData = @{

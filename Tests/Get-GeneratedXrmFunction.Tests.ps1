@@ -47,6 +47,11 @@ Describe "Generate-XrmFunction" {
         "SchemaName" = "somemoney"
         "DisplayName" = "AMoneyValue"
         "AttributeType" = "Money"
+    },
+    [PSCustomObject]@{
+        "SchemaName" = "address1_utcoffset"
+        "DisplayName" = "UtcOffset"
+        "AttributeType" = "Integer"
     }
     
     
@@ -228,7 +233,10 @@ Describe "Generate-XrmFunction" {
         }
 
         It "Can use Integer as parameter" {
-            
+            $result = [xml](Get-XrmAccount -UtcOffset 2)
+            $result.fetch.entity.filter.condition.attribute  | Should Be "address1_utcoffset"
+            $result.fetch.entity.filter.condition.operator  | Should Be "eq"
+            $result.fetch.entity.filter.condition.value  | Should Be 2
         }
         
         It "Can use Decimal as parameter" {
@@ -382,7 +390,8 @@ Describe "Generate-XrmFunction" {
         }
 
         It "Can use Integer as parameter" {
-            
+            $result = Set-XrmAccount -AccountId $AccountGuid1 -UtcOffset 2
+            $result["address1_utcoffset"] | Should Be 2
         }
         
         It "Can use Decimal as parameter" {

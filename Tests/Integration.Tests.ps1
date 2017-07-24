@@ -44,6 +44,11 @@ Describe "Test function genereration and use against CRM instance" {
         "SchemaName" = "creditlimit"
         "DisplayName" = "CreditLimit"
         "AttributeType" = "Money"
+    },
+    [PSCustomObject]@{
+        "SchemaName" = "address1_utcoffset"
+        "DisplayName" = "UtcOffset"
+        "AttributeType" = "Integer"
     }
 
     
@@ -106,6 +111,12 @@ Describe "Test function genereration and use against CRM instance" {
         $global:AccountRecord.creditlimit_Property.Value.Value | Should Be 40000
     }
 
+     It "Can update Integer-value" {
+        $global:AccountId | Set-XrmAccount -UtcOffset 2
+        $global:AccountRecord = Get-XrmAccount -AccountId $global:AccountId
+        $global:AccountRecord.address1_utcoffset | Should Be 2
+    }
+
     It "Can update DateTime-value" {
 
     }
@@ -130,8 +141,13 @@ Describe "Test function genereration and use against CRM instance" {
         $Accounts.accountid -contains $global:AccountId | Should Be $true
     }
 
-     It "Can query Money-value" {
+    It "Can query Money-value" {
         $Accounts = Get-XrmAccount -CreditLimit 40000
+        $Accounts.accountid -contains $global:AccountId | Should Be $true
+    }
+
+    It "Can query Money-value" {
+        $Accounts = Get-XrmAccount -UtcOffset 2
         $Accounts.accountid -contains $global:AccountId | Should Be $true
     }
 
