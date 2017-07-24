@@ -35,6 +35,14 @@
         "LookupParameterTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Common\LookupParameterTemplate.ps1")
         "LookupParameterTemplateGet" = (Get-Content -Raw "$ModuleRootDir\Templates\Common\LookupParameterTemplateGet.ps1")
         "PicklistValueTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Common\PicklistValueTemplate.ps1")
+        "PicklistAdderTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\NewSet\PicklistAdderTemplate.ps1")
+        "DefaultAdderTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\NewSet\DefaultAdderTemplate.ps1")
+        "LookupAdderTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\NewSet\LookupAdderTemplate.ps1")
+        "MoneyAdderTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\NewSet\MoneyAdderTemplate.ps1")
+        "DefaultFilterTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Get\DefaultFilterTemplate.ps1")
+        "PicklistFilterTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Get\PicklistFilterTemplate.ps1")
+        "DateTimeFilterTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Get\DateTimeFilterTemplate.ps1")
+        "LookupFilterTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Get\LookupFilterTemplate.ps1")
     }
 
     #Write-Verbose $TemplateData.ContainsKey("Attributes")
@@ -55,11 +63,11 @@
         }
 
         "Set" {
-            $TemplateToUse = Get-Content -Raw "$PSScriptRoot\Templates\Set\MainSetTemplate.ps1" 
+            $TemplateToUse = Get-Content -Raw "$PSScriptRoot\Templates\NewSet\MainSetTemplate.ps1" 
         }
 
         "New" {
-            $TemplateToUse = Get-Content -Raw "$PSScriptRoot\Templates\New\MainNewTemplate.ps1" 
+            $TemplateToUse = Get-Content -Raw "$PSScriptRoot\Templates\NewSet\MainNewTemplate.ps1" 
         }
 
         "Remove" {

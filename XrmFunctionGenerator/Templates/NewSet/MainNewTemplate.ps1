@@ -30,7 +30,7 @@ function New-$Prefix$EntityDisplayName {
         }
 
         $(
-            . "$ModuleRootDir\Templates\Common\CommonLogic.ps1"
+            . "$ModuleRootDir\Templates\NewSet\CommonLogic.ps1"
         )
 
         New-CrmRecord -EntityLogicalName $EntityLogicalName -Fields `$FieldsToSend

@@ -5,7 +5,7 @@ if (`$MyInvocation.BoundParameters.ContainsKey("$DisplayName") -and `$MyInvocati
 switch (`$$DisplayName){
 $(
     foreach ($OptionKey in $Options.Keys){
-        "`n`t`t`t`"$($Options[$OptionKey])`" { `$$($DisplayName)Value = $OptionKey }"
+        "`n`t`"$($Options[$OptionKey])`" { `$$($DisplayName)Value = $OptionKey }"
     }
 )
     default {

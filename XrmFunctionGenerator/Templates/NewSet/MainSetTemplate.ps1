@@ -28,10 +28,8 @@ function Set-$Prefix$EntityDisplayName {
 
         `$FieldsToSend = `$Fields
 
-        $(
-            
-            $Padding = "`t`t"
-            . "$ModuleRootDir\Templates\Common\CommonLogic.ps1"
+$(
+            . "$ModuleRootDir\Templates\NewSet\CommonLogic.ps1"
         )
     }
 

@@ -1,16 +1,25 @@
-function Get-IndentedString{
+
+function Add-Indentation{
+    [CmdletBinding()]
 
     param(
+        [Parameter(ValueFromPipeline=$true)]
         [string[]]$StringToIndent,
-        [int]$Steps,
+        
+        [int]$Steps = 1,
+        
         [string]$Indentor = "`t"
     )
 
-    $Indentation = (1..$Steps | ForEach-Object { "$Indentor" }) -join ""
+    BEGIN {
+        $Indentation = (1..$Steps | ForEach-Object { "$Indentor" }) -join ""
+    }
 
-    foreach ($string in $StringToIndent){
-        ($string -split "`r`n" | ForEach-Object {
-            "$Indentation$_"
-        }) -join "`n"
+    PROCESS {
+        foreach ($string in $StringToIndent){
+            ($string -split "`n" | ForEach-Object {
+                "$Indentation$_"
+            }) -join "`n"
+        }
     }
 }

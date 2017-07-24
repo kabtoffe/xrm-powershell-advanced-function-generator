@@ -1,4 +1,4 @@
-#Requires -modules Microsoft.Xrm.Data.PowerShell
+#Requires -modules Microsoft.Xrm.Data.PowerShell,XrmFunctionGenerator
 #Generated using https://github.com/kabtoffe/xrm-powershell-advanced-function-generator
 function Get-$Prefix$EntityDisplayName {
     [CmdletBinding()]
@@ -24,13 +24,12 @@ function Get-$Prefix$EntityDisplayName {
 
         default {
 
-            $(
-                $Padding = "`t`t`t"
+$(
                 
                 foreach ($attribute in $Attributes | Where-Object AttributeType -eq "Picklist"){
-                    Get-IndentedString -Step 2 -StringToIndent (
-                        Invoke-Template -Template $PicklistvalueTemplate -TemplateModel $attribute
-                    )
+                    
+                    Invoke-Template -Template $PicklistvalueTemplate -TemplateModel $attribute | Add-Indentation -Steps 3
+                
                 }
                 
             )

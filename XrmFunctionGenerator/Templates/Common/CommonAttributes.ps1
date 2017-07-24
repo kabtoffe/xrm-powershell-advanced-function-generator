@@ -9,32 +9,30 @@ foreach ($attribute in $Attributes){
 
         default {
             
-            Get-IndentedString -Steps 2 -StringToIndent (
-                Invoke-Template -Template $DefaultParameterTemplate -TemplateModel $attribute
-            )
+                Invoke-Template -Template $DefaultParameterTemplate -TemplateModel $attribute | Add-Indentation -Steps 2
+            
             
             
         }
 
         "picklist" {
-            Get-IndentedString -Steps 2 -StringToIndent (
-                Invoke-Template -Template $PicklistParameterTemplate -TemplateModel $attribute
-            )
+            
+            Invoke-Template -Template $PicklistParameterTemplate -TemplateModel $attribute | Add-Indentation -Steps 2
+            
         }
 
         "lookup" {
            
             if ($TemplateType -eq "Get") {
-                Get-IndentedString -Steps 2 -StringToIndent (
-                    Invoke-Template -Template $LookupParameterTemplateGet -TemplateModel $attribute 
-                )
+                Invoke-Template -Template $LookupParameterTemplateGet -TemplateModel $attribute  | Add-Indentation -Steps 2
+                
                 "`n`n "
                 $Pos++
             }
             
-            Get-IndentedString -Steps 2 -StringToIndent (
-                Invoke-Template -Template $LookupParameterTemplate -TemplateModel $attribute
-            )
+            
+            Invoke-Template -Template $LookupParameterTemplate -TemplateModel $attribute | Add-Indentation -Steps 2
+            
            
         }
     }
