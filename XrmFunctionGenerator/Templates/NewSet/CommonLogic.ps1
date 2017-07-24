@@ -1,5 +1,5 @@
-foreach ($attribute in $Attributes | Where-Object AttributeType -eq "Picklist"){
-    Invoke-Template -Template $PicklistValueTemplate -TemplateModel $attribute | Add-Indentation -Step 2
+foreach ($attribute in $Attributes | Where-Object { "Picklist","Boolean" -contains $_.AttributeType }){
+    Invoke-Template -Template $PicklistBooleanValueTemplate -TemplateModel $attribute | Add-Indentation -Step 2
     "`n"
 }
 "`n"
@@ -10,6 +10,10 @@ foreach ($attribute in $Attributes){
 
         "Picklist"{
            Invoke-Template -Template $PicklistAdderTemplate -TemplateModel $attribute | Add-Indentation -Step 2
+        }
+
+        "Boolean" {
+            Invoke-Template -Template $BooleanAdderTemplate -TemplateModel $attribute | Add-Indentation -Step 2
         }
 
         "Money"{

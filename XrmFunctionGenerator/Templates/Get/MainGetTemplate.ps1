@@ -26,9 +26,9 @@ function Get-$Prefix$EntityDisplayName {
 
 $(
                 
-                foreach ($attribute in $Attributes | Where-Object AttributeType -eq "Picklist"){
+                foreach ($attribute in $Attributes | Where-Object { "Picklist","Boolean" -contains $_.AttributeType }){
                     
-                    Invoke-Template -Template $PicklistvalueTemplate -TemplateModel $attribute | Add-Indentation -Steps 3
+                    Invoke-Template -Template $PicklistBooleanValueTemplate -TemplateModel $attribute | Add-Indentation -Steps 3
                 
                 }
                 

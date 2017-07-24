@@ -10,14 +10,18 @@ foreach ($attribute in $Attributes){
         default {
             
                 Invoke-Template -Template $DefaultParameterTemplate -TemplateModel $attribute | Add-Indentation -Steps 2
-            
-            
-            
+
         }
 
         "picklist" {
             
             Invoke-Template -Template $PicklistParameterTemplate -TemplateModel $attribute | Add-Indentation -Steps 2
+            $Pos++
+        }
+
+        "boolean" {
+            
+            Invoke-Template -Template $BooleanParameterTemplate -TemplateModel $attribute | Add-Indentation -Steps 2
             $Pos++
         }
 

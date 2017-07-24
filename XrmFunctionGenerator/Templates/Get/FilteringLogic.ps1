@@ -5,6 +5,10 @@ foreach ($attribute in $attributes) {
             Invoke-Template -Template $PicklistFilterTemplate -TemplateModel $attribute | Add-Indentation -Steps 2
         }
 
+        "boolean" {
+            Invoke-Template -Template $PicklistFilterTemplate -TemplateModel $attribute | Add-Indentation -Steps 2
+        }
+
         default {
             Invoke-Template -Template $DefaultFilterTemplate -TemplateModel $attribute | Add-Indentation -Steps 2
         }

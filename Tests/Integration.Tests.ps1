@@ -49,11 +49,20 @@ Describe "Test function genereration and use against CRM instance" {
         "SchemaName" = "address1_utcoffset"
         "DisplayName" = "UtcOffset"
         "AttributeType" = "Integer"
+    },
+    [PSCustomObject]@{
+        "SchemaName" = "donotemail"
+        "DisplayName" = "DoNotEmail"
+        "AttributeType" = "Boolean"
+        "Options" = @{
+            "`$true" = "Denied"
+            "`$false" = "Allowed"
+        }
     }
 
     
     "Get","Set","New","Remove" | ForEach-Object { Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName Account -EntityLogicalName account -Attributes $Attributes -Template $_) }
-    "Get","Set","New","Remove" | ForEach-Object { Get-GeneratedXrmFunction -EntityDisplayName Account -EntityLogicalName account -Attributes $Attributes -Template $_ > ".\GeneratedFunctions\$_-Account.ps1" }
+    "Get","Set","New","Remove" | ForEach-Object { Get-GeneratedXrmFunction -EntityDisplayName Account -EntityLogicalName account -Attributes $Attributes -Template $_ > ".\GeneratedFunctions\$_-XrmAccount.ps1" }
     
     It "Get-XrmAccount exists" {
         Get-Command Get-XrmAccount | Should Not Be $null
@@ -117,6 +126,18 @@ Describe "Test function genereration and use against CRM instance" {
         $global:AccountRecord.address1_utcoffset | Should Be 2
     }
 
+    It "Can update Boolean-value" {
+        $global:AccountId | Set-XrmAccount -DoNotEmailValue $true
+        $global:AccountRecord = Get-XrmAccount -AccountId $global:AccountId
+        $global:AccountRecord.donotemail_Property.Value | Should Be $true
+    }
+
+    It "Can update Boolean-value with label" {
+        $global:AccountId | Set-XrmAccount -DoNotEmail "Denied"
+        $global:AccountRecord = Get-XrmAccount -AccountId $global:AccountId -Fields "donotemail"
+        $global:AccountRecord.donotemail_Property.Value | Should Be $true
+    }
+
     It "Can update DateTime-value" {
 
     }
@@ -148,6 +169,16 @@ Describe "Test function genereration and use against CRM instance" {
 
     It "Can query Integer-value" {
         $Accounts = Get-XrmAccount -UtcOffset 2
+        $Accounts.accountid -contains $global:AccountId | Should Be $true
+    }
+
+    It "Can query Boolean-value" {
+        $Accounts = Get-XrmAccount -DoNotEmailValue $true
+        $Accounts.accountid -contains $global:AccountId | Should Be $true
+    }
+
+    It "Can query Boolean-value with label" {
+        $Accounts = Get-XrmAccount -DoNotEmail "Denied" -Fields "accountid"
         $Accounts.accountid -contains $global:AccountId | Should Be $true
     }
 

@@ -52,6 +52,15 @@ Describe "Generate-XrmFunction" {
         "SchemaName" = "address1_utcoffset"
         "DisplayName" = "UtcOffset"
         "AttributeType" = "Integer"
+    },
+    [PSCustomObject]@{
+        "SchemaName" = "donotemail"
+        "DisplayName" = "DoNotEmail"
+        "AttributeType" = "Boolean"
+        "Options" = @{
+            "`$true" = "Denied"
+            "`$false" = "Allowed"
+        }
     }
     
     
@@ -228,8 +237,18 @@ Describe "Generate-XrmFunction" {
             $result.fetch.entity.filter.condition.value  | Should Be 2
         }
 
-        It "Can use Boolean as parameter" {
+        It "Can use BooleanValue as parameter" {
+            $result = [xml](Get-XrmAccount -DoNotEmailValue $false)
+            $result.fetch.entity.filter.condition.attribute  | Should Be "donotemail"
+            $result.fetch.entity.filter.condition.operator  | Should Be "eq"
+            $result.fetch.entity.filter.condition.value  | Should Be "false"
+        }
 
+        It "Can use Boolean label as parameter" {
+            $result = [xml](Get-XrmAccount -DoNotEmail "Denied")
+            $result.fetch.entity.filter.condition.attribute  | Should Be "donotemail"
+            $result.fetch.entity.filter.condition.operator  | Should Be "eq"
+            $result.fetch.entity.filter.condition.value  | Should Be "true"
         }
 
         It "Can use Integer as parameter" {
@@ -385,8 +404,14 @@ Describe "Generate-XrmFunction" {
             $result["somemoney"].Value | Should Be 50
         }
 
-        It "Can use Boolean as parameter" {
+        It "Can use Boolean value as parameter" {
+            $result = Set-XrmAccount -AccountId $AccountGuid1 -DoNotEmailValue $false
+            $result["donotemail"] | Should Be $false
+        }
 
+         It "Can use Boolean label as parameter" {
+            $result = Set-XrmAccount -AccountId $AccountGuid1 -DoNotEmail "Denied"
+            $result["donotemail"] | Should Be $true
         }
 
         It "Can use Integer as parameter" {
