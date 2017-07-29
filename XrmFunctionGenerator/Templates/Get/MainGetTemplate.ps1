@@ -16,35 +16,32 @@ function Get-$Prefix$EntityDisplayName {
         [string[]]`$Fields = "*"
     )
 
-    switch (`$PSCmdlet.ParameterSetName){
+    if (`$PSCmdlet.ParameterSetName -eq "Guid"){
 
-        "Guid" {
             Get-CrmRecord -EntityLogicalName $EntityLogicalName -Id `$$($EntityDisplayName)Id -Fields `$Fields
-        }
+    }
 
-        default {
-
-$(
-                
-                foreach ($attribute in $Attributes | Where-Object { "Picklist","Boolean" -contains $_.AttributeType }){
-                    
-                    Invoke-Template -Template $PicklistBooleanValueTemplate -TemplateModel $attribute | Add-Indentation -Steps 3
-                
-                }
-                
-            )
-
-            `$conditions = @()
+    else {
 
 $(
-                . "$ModuleRootDir\Templates\Get\FilteringLogic.ps1"
-            )
+                
+            foreach ($attribute in $Attributes | Where-Object { "Picklist","Boolean" -contains $_.AttributeType }){
+                
+                Invoke-Template -Template $PicklistBooleanValueTemplate -TemplateModel $attribute | Add-Indentation -Steps 2
+            
+            }
+            
+        )
 
-            `$FetchXml = Get-FetchXml -EntityLogicalName $EntityLogicalName -Conditions `$conditions -Fields `$Fields
+        `$conditions = @()
 
-            (Get-CrmRecordsByFetch -Fetch `$FetchXml -AllRows).CrmRecords
-        }
+$(
+            . "$ModuleRootDir\Templates\Get\FilteringLogic.ps1"
+        )
 
+        `$FetchXml = Get-FetchXml -EntityLogicalName $EntityLogicalName -Conditions `$conditions -Fields `$Fields
+
+        (Get-CrmRecordsByFetch -Fetch `$FetchXml -AllRows).CrmRecords
     }
     
 }
