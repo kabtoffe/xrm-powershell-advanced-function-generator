@@ -304,6 +304,10 @@ Describe "Generate-XrmFunction" {
             
         }
 
+        IT "Can use PartyList as paramaeter"{
+            
+        }
+
 
         It "If Fields is not provided get all fields" {
             $result = [xml](Get-XrmAccount -CustomerType Competitor)
@@ -418,7 +422,8 @@ Describe "Generate-XrmFunction" {
         }
 
         It "Can use DateTime as parameter" {
-
+            $result = Set-XrmAccount -ADateValue ([DateTime]::Today) 2.0 -AccountId $AccountGuid1
+            $result["somedate"] | Should Be ([DateTime]::Today)
         }
 
         It "Can use Money as parameter" {
@@ -468,6 +473,9 @@ Describe "Generate-XrmFunction" {
             
         }
 
+        IT "Can use PartyList as paramaeter"{
+
+        }
 
         It "Can use lookup id as parameter" {
             $result = Set-XrmAccount -PrimaryContactId $ContactId -AccountId $AccountGuid1
