@@ -1,4 +1,15 @@
-$Attributes = Get-CrmEntityAttributes -EntityLogicalName account |
+function Get-CrudFunctions{
+    param(
+
+        $EntityLogicalName,
+
+        $EntityDisplayName,
+
+        $Prefix = "Xrm"
+    )
+
+$InvalidCharactersInParameterName = "/","(",")",":",",","-","+","%"
+$Attributes = Get-CrmEntityAttributes -EntityLogicalName $EntityLogicalName |
     Where-Object { "picklist","string","lookup","double","datetime","money","integer","bigint","decimal","boolean","memo" -contains $_.AttributeType -and $_.DisplayName.UserLocalizedLabel.Label -ne $null } |
     Select-Object @{
             N = "SchemaName"
@@ -7,9 +18,8 @@ $Attributes = Get-CrmEntityAttributes -EntityLogicalName account |
         @{
             N= "DisplayName"
             E= { 
-                
-                #Get rid of extra characters
-                $DisplayName = $_.DisplayName.UserLocalizedLabel.Label.Replace("/","").Replace("(","").Replace(")","").Replace(":","").Replace("-","")
+                $DisplayName = $_.DisplayName.UserLocalizedLabel.Label
+                $InvalidCharactersInParameterName | ForEach-Object { $DisplayName = $DisplayName.Replace($_,"") }
                 $DisplayName = (Get-Culture).TextInfo.ToTitleCase($DisplayName)
                 $DisplayName.Replace(" ","")
             }
@@ -27,12 +37,22 @@ $Attributes = Get-CrmEntityAttributes -EntityLogicalName account |
         @{ 
             "N" = "Options" 
             E = {
+
                 $values = @{}
-                $_.OptionSet.Options |
+                if ($_.AttributeType -eq "Picklist"){
+                
+                    $_.OptionSet.Options |
                     ForEach-Object {
                         $values.Add($_.Value,$_.Label.UserLocalizedLabel.Label)
                     }
+                }
+                elseif ($_.AttributeType -eq "Boolean") {
+                    $values.Add("`$true",$_.OptionSet.TrueOption.Label.UserLocalizedLabel.Label)
+                    $values.Add("`$false",$_.OptionSet.FalseOption.Label.UserLocalizedLabel.Label)
+                }
                 $values
             }
         }
- "Get","Set","New","Remove" | ForEach-Object { Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName Account -EntityLogicalName account -Attributes $Attributes -Template $_) }
+     "Get","Set","New","Remove" | ForEach-Object { Get-GeneratedXrmFunction -EntityDisplayName $EntityDisplayName -EntityLogicalName $EntityLogicalName -Prefix $Prefix -Attributes $Attributes -Template $_ }
+}
+Get-CrudFunctions -EntityLogicalName account -EntityDisplayName Account | ForEach-Object { Invoke-Expression $_ }
