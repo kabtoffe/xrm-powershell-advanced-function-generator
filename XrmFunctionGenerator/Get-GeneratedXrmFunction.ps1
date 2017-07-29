@@ -29,28 +29,44 @@
         "Memo" = "string"
     }
 
+    
+
     $TemplateData = @{
         "EntityDisplayName" = $EntityDisplayName
         "EntityLogicalName" = $EntityLogicalName
         "Attributes" = ($Attributes | Where-Object { $AttributeToParameterTypeMapping.Keys -contains $_.AttributeType})
         "Prefix" = $Prefix
         "TemplateType" = $Template
-        "DefaultParameterTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Common\DefaultParameterTemplate.ps1")
-        "PicklistParameterTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Common\PicklistParameterTemplate.ps1")
-        "BooleanParameterTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Common\BooleanParameterTemplate.ps1")
-        "LookupParameterTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Common\LookupParameterTemplate.ps1")
         "LookupParameterTemplateGet" = (Get-Content -Raw "$ModuleRootDir\Templates\Common\LookupParameterTemplateGet.ps1")
         "PicklistBooleanValueTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Common\PicklistBooleanValueTemplate.ps1")
-        "PicklistAdderTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\NewSet\PicklistAdderTemplate.ps1")
-        "BooleanAdderTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\NewSet\BooleanAdderTemplate.ps1")
-        "DefaultAdderTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\NewSet\DefaultAdderTemplate.ps1")
-        "LookupAdderTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\NewSet\LookupAdderTemplate.ps1")
-        "MoneyAdderTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\NewSet\MoneyAdderTemplate.ps1")
-        "DefaultFilterTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Get\DefaultFilterTemplate.ps1")
-        "PicklistFilterTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Get\PicklistFilterTemplate.ps1")
         "BooleanFilterTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Get\PicklistFilterTemplate.ps1")
-        "DateTimeFilterTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Get\DateTimeFilterTemplate.ps1")
-        "LookupFilterTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Get\LookupFilterTemplate.ps1")
+    }
+
+    Write-Verbose "Adding Parameter-templates"
+    Get-ChildItem -Path "$ModuleRootDir\Templates\Common\" -Filter "*ParameterTemplate.ps1" | ForEach-Object {
+        Write-Verbose "Adding $($_.Name)"
+        $TemplateData.Add(
+            $_.Name.Replace(".ps1",""),
+            (Get-Content -Path $_.FullName -Raw)
+        )
+    }
+
+    Write-Verbose "Adding Filter-templates"
+    Get-ChildItem -Path "$ModuleRootDir\Templates\Get\" -Filter "*FilterTemplate.ps1" | ForEach-Object {
+        Write-Verbose "Adding $($_.Name)"
+        $TemplateData.Add(
+            $_.Name.Replace(".ps1",""),
+            (Get-Content -Path $_.FullName -Raw)
+        )
+    }
+
+    Write-Verbose "Adding Adder-templates"
+    Get-ChildItem -Path "$ModuleRootDir\Templates\NewSet\" -Filter "*AdderTemplate.ps1" | ForEach-Object {
+        Write-Verbose "Adding $($_.Name)"
+        $TemplateData.Add(
+            $_.Name.Replace(".ps1",""),
+            (Get-Content -Path $_.FullName -Raw)
+        )
     }
 
     #Write-Verbose $TemplateData.ContainsKey("Attributes")
@@ -60,32 +76,25 @@
         if ($otherattributes.DisplayName -contains $attribute.SchemaName){
             throw "parameter $($attribute.DisplayName) $($attribute.SchemaName) alias will conflict with another parameter display name"
         }
-    }
-
-    $TemplateToUse = ""
-
-    switch ($Template){
-
-        "Get" {
-            $TemplateToUse = Get-Content -Raw "$PSScriptRoot\Templates\Get\MainGetTemplate.ps1" 
-        }
-
-        "Set" {
-            $TemplateToUse = Get-Content -Raw "$PSScriptRoot\Templates\NewSet\MainSetTemplate.ps1" 
-        }
-
-        "New" {
-            $TemplateToUse = Get-Content -Raw "$PSScriptRoot\Templates\NewSet\MainNewTemplate.ps1" 
-        }
-
-        "Remove" {
-            $TemplateToUse = Get-Content -Raw "$PSScriptRoot\Templates\Remove\MainRemoveTemplate.ps1" 
-        }
-
-        default {
-            $TemplateToUse = $Template
+        if ($otherattributes.DisplayName -contains $attribute.DisplayName){
+            throw "duplicate DisplayName: $($attribute.DisplayName) $($attribute.SchemaName)"
         }
     }
+
+    $TemplatesAvailable = @{}
+    Get-ChildItem -Path "$ModuleRootDir\Templates" -Recurse -Filter "Main*Template.ps1" |
+        ForEach-Object {
+            $TemplatesAvailable.Add(
+                $_.Name.Substring(4,$_.Name.IndexOf("Template.ps1")-4),
+                (Get-Content -Raw -LiteralPath $_.FullName)
+            )
+        }
+
+    $TemplateToUse = $Template
+
+    if ($TemplatesAvailable.ContainsKey($Template)){
+        $TemplateToUse = $TemplatesAvailable[$Template]
+    }    
 
     Invoke-Template -Template $TemplateToUse -TemplateData $TemplateData
 }
