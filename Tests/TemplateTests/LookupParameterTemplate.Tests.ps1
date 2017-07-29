@@ -1,6 +1,11 @@
 Describe "Testing PicklistValueTemplate"{
-    . ".\CommonParameters.ps1"
-    $ParameterTemplate = Get-Content -Raw "$ModuleRootDir\Templates\Common\LookupParameterTemplate.ps1"
+    . "$PSScriptRoot\CommonParameters.ps1"
+    $CurrentDir = (Get-Location).Path
+    $ModuleRootDir = $CurrentDir.Substring(0,$CurrentDir.IndexOf("xrm-powershell-advanced-function-generator")+42)+"\XrmFunctionGenerator"
+    $ParameterTemplate =  Get-Content "$ModuleRootDir\Templates\Common\LookupParameterTemplate.ps1" -Raw
+    $ParameterTemplate += "`n`n"
+    $ParameterTemplate += Get-Content "$ModuleRootDir\Templates\Common\LookupParameterTemplateGet.ps1" -Raw
+
     $DisplayName = "PrimaryCustomer"
     $SchemaName = "new_primarycustomer"
     $Pos = 1
@@ -22,21 +27,13 @@ Describe "Testing PicklistValueTemplate"{
         Invoke-TestFunction -PrimaryCustomerId $TestGuid | Should Be $TestGuid
     }
 
-     It "Should not be able to call Set with lookup record name" {
-        $ParameterCodeBlock = Invoke-Expression ("@`"`n" + $ParameterTemplate + "`n`"@")
-        $MainCodeBlock = "`$PrimaryCustomerId"
-        Invoke-Expression (Invoke-Expression ("@`"`n" + $TestTemplate + "`n`"@"))
-        (get-command Invoke-TestFunction).Parameters.ContainsKey("PrimaryContact") | Should Be $false
-        { Invoke-TestFunction -PrimaryContact "Firstname Lastname" } | Should Throw
-     }
-
-     It "Should be able to call Get with lookup record name" {
+    It "Should be able to call Get with lookup record name" {
         $TemplateType = "Get"
         $ParameterCodeBlock = Invoke-Expression ("@`"`n" + $ParameterTemplate + "`n`"@")
         $MainCodeBlock = "`$PrimaryCustomer"
         Invoke-Expression (Invoke-Expression ("@`"`n" + $TestTemplate + "`n`"@"))
-        (get-command Invoke-TestFunction).Parameters.ContainsKey("PrimaryContact") | Should Be $false
-        Invoke-TestFunction -PrimaryContact "Firstname Lastname" | Should Be "Firstname Lastname"
+        (get-command Invoke-TestFunction).Parameters.ContainsKey("PrimaryCustomer") | Should Be $true
+        Invoke-TestFunction -PrimaryCustomer "Firstname Lastname" | Should Be "Firstname Lastname"
      }
 
 

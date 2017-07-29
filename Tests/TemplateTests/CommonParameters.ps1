@@ -1,5 +1,4 @@
-$ModuleRootDir = "..\..\XrmFunctionGenerator"
-$TestTemplate = Get-Content -Raw .\TestTemplate.ps1
+$TestTemplate = Get-Content -Raw "$PSScriptRoot\TestTemplate.ps1"
 
 $AttributeToParameterTypeMapping = @{
     "string" = "string"

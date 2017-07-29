@@ -1,6 +1,8 @@
 Describe "Testing DefaultValueTempate"{
-    . ".\CommonParameters.ps1"
-    $ParameterTemplate = Get-Content -Raw "$ModuleRootDir\Templates\Common\DefaultParameterTemplate.ps1"
+    . "$PSScriptRoot\CommonParameters.ps1"
+    $CurrentDir = (Get-Location).Path
+    $ModuleRootDir = $CurrentDir.Substring(0,$CurrentDir.IndexOf("xrm-powershell-advanced-function-generator")+42)+"\XrmFunctionGenerator"
+    $ParameterTemplate =  Get-Content "$ModuleRootDir\Templates\Common\DefaultParameterTemplate.ps1" -Raw
     $DisplayName = "Name"
     $SchemaName = "name"
     
