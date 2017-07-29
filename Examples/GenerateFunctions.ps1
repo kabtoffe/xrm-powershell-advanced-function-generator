@@ -53,6 +53,6 @@ $Attributes = Get-CrmEntityAttributes -EntityLogicalName $EntityLogicalName |
                 $values
             }
         }
-     "Get","Set","New","Remove" | ForEach-Object { Get-GeneratedXrmFunction -EntityDisplayName $EntityDisplayName -EntityLogicalName $EntityLogicalName -Prefix $Prefix -Attributes $Attributes -Template $_ }
+     "Get","Set","New","Remove" | ForEach-Object { Get-XrmFunctionCode -EntityDisplayName $EntityDisplayName -EntityLogicalName $EntityLogicalName -Prefix $Prefix -Attributes $Attributes -Template $_ }
 }
 Get-CrudFunctions -EntityLogicalName account -EntityDisplayName Account | ForEach-Object { Invoke-Expression $_ }

@@ -139,7 +139,7 @@ Describe "Generate-XrmFunction" {
                 "AttributeType" = "Lookup"
                 "TargetEntityLogicalName" = "contact"
             }
-            { Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "Test" -EntityLogicalName "test" -Attributes $attributesfail -Prefix "Xrm" -Template "Get") } | Should Throw
+            { Invoke-Expression (Get-XrmFunctionCode -EntityDisplayName "Test" -EntityLogicalName "test" -Attributes $attributesfail -Prefix "Xrm" -Template "Get") } | Should Throw
         }
 
         It "Should fail to generate if attributename (alias) matches other field display names" {
@@ -168,12 +168,12 @@ Describe "Generate-XrmFunction" {
                 "AttributeType" = "Lookup"
                 "TargetEntityLogicalName" = "contact"
             }
-            { Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "Test" -EntityLogicalName "test" -Attributes $attributesfail -Prefix "Xrm" -Template "Get") } | Should Throw
+            { Invoke-Expression (Get-XrmFunctionCode -EntityDisplayName "Test" -EntityLogicalName "test" -Attributes $attributesfail -Prefix "Xrm" -Template "Get") } | Should Throw
         }
 
 
-        Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Get")
-        #Get-GeneratedXrmFunction -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Get" > GetTestFunction.ps1
+        Invoke-Expression (Get-XrmFunctionCode -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Get")
+        #Get-XrmFunctionCode -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Get" > GetTestFunction.ps1
 
 
         It "Can be called using Guid" {
@@ -356,8 +356,8 @@ Describe "Generate-XrmFunction" {
             return $Fields
         }
 
-        Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Set")
-        #Get-GeneratedXrmFunction -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Set" > SetTestFunction.ps1
+        Invoke-Expression (Get-XrmFunctionCode -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Set")
+        #Get-XrmFunctionCode -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Set" > SetTestFunction.ps1
 
         It "Can be called" {
             Set-XrmAccount -AccountId $AccountGuid1
@@ -505,7 +505,7 @@ Describe "Generate-XrmFunction" {
 
         
 
-        Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "NotAccount" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Set")
+        Invoke-Expression (Get-XrmFunctionCode -EntityDisplayName "NotAccount" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Set")
 
         It "Can be called via pipeline when logicalname doesn't match display name" {
             $account1,$account2 | Set-XrmNotAccount -CustomerType Customer | ForEach-Object {
@@ -522,7 +522,7 @@ Describe "Generate-XrmFunction" {
             return $Fields
         }
 
-        Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "New")
+        Invoke-Expression (Get-XrmFunctionCode -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "New")
 
         It "Can be called" {
             New-XrmAccount
@@ -555,7 +555,7 @@ Describe "Generate-XrmFunction" {
             return "$EntityLogicalName-$Id"
         }
 
-        Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Remove")
+        Invoke-Expression (Get-XrmFunctionCode -EntityDisplayName "Account" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Remove")
 
         It "Can be called and calls Remove-CrmRecord with entitylogicalname and id" {
             $result = Remove-XrmAccount -AccountId $AccountGuid1
@@ -582,7 +582,7 @@ Describe "Generate-XrmFunction" {
             $result[1] | Should Be "account-$AccountGuid2"
         }
 
-        Invoke-Expression (Get-GeneratedXrmFunction -EntityDisplayName "NotAccount" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Remove")
+        Invoke-Expression (Get-XrmFunctionCode -EntityDisplayName "NotAccount" -EntityLogicalName "account" -Attributes $attributes -Prefix "Xrm" -Template "Remove")
 
         It "Can be called via pipeline when logicalname doesn't match display name" {
             $result = $account1,$account2 | Remove-XrmNotAccount

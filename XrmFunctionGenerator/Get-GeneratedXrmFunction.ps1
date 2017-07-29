@@ -1,6 +1,37 @@
-﻿function Get-GeneratedXrmFunction {
-    [CmdletBinding()]
+﻿function Get-XrmFunctionCode {
+<#
+.SYNOPSIS
 
+Generates advanced functions for use with Dynamics 365 Customer Engagement (CRM).
+
+.DESCRIPTION
+
+A function that uses templates and metadata to generate ready to use advanced functions to wrap around Microsoft.Xrm.Data.PowerShell cmdlets. There are templates that create functions for New, Get, Set and Remove operations. The function parameters are generated from an metadata array that contains all the entity attributes that should be usable directly. One can also supply attributes and values via the Fields-parameter.
+
+The function follow the pattern Verb-PrefixEntityname pattern. So eg. for account using a prefix of Xrm, it generates the following functions: New-XrmAccount, Get-XrmAccount, Set-XrmAccount and Remove-XrmAccount.
+
+.PARAMETER EntityDisplayName
+
+The noun for the resulting command. Eg. Account
+
+.PARAMETER EntityLogicalName
+
+The logical (system) name for the entity the command uses. Eg. accouny
+
+.PARAMETER Attributes
+
+An array of objects that contain the attributes to generate parameters for. Should have properties for SchemaName, DisplayName, AttributeType, TargetEntityName (lookups), Options (picklists and boolean). See examples.
+
+.EXAMPLE
+
+Get-XrmFunctionCode -EntityDisplayName account -EntityLogicalName account -Template Get -Attributes [PSCustomObject]@{
+"SchemaName" = "name"
+"DisplayName" = "Name"
+"AttributeType" = "string"
+} > Get-XrmAccount.ps1
+
+#>
+    [CmdletBinding()]
     param(
         
         [string]$EntityDisplayName,
