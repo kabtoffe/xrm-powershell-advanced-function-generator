@@ -38,7 +38,8 @@
         "Prefix" = $Prefix
         "TemplateType" = $Template
         "LookupParameterTemplateGet" = (Get-Content -Raw "$ModuleRootDir\Templates\Common\LookupParameterTemplateGet.ps1")
-        "PicklistBooleanValueTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Common\PicklistBooleanValueTemplate.ps1")
+        "PicklistValueTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Common\PicklistBooleanValueTemplate.ps1")
+        "BooleanValueTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Common\PicklistBooleanValueTemplate.ps1")
         "BooleanFilterTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Get\PicklistFilterTemplate.ps1")
     }
 
