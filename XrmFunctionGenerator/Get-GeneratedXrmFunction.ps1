@@ -48,6 +48,7 @@
         "MoneyAdderTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\NewSet\MoneyAdderTemplate.ps1")
         "DefaultFilterTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Get\DefaultFilterTemplate.ps1")
         "PicklistFilterTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Get\PicklistFilterTemplate.ps1")
+        "BooleanFilterTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Get\PicklistFilterTemplate.ps1")
         "DateTimeFilterTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Get\DateTimeFilterTemplate.ps1")
         "LookupFilterTemplate" = (Get-Content -Raw "$ModuleRootDir\Templates\Get\LookupFilterTemplate.ps1")
     }

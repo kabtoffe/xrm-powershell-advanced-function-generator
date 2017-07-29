@@ -422,7 +422,7 @@ Describe "Generate-XrmFunction" {
         }
 
         It "Can use DateTime as parameter" {
-            $result = Set-XrmAccount -ADateValue ([DateTime]::Today) 2.0 -AccountId $AccountGuid1
+            $result = Set-XrmAccount -ADateValue ([DateTime]::Today) -AccountId $AccountGuid1
             $result["somedate"] | Should Be ([DateTime]::Today)
         }
 

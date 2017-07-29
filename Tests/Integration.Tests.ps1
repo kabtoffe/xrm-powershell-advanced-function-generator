@@ -114,9 +114,9 @@ Describe "Test function genereration and use against CRM instance" {
     }
 
     It "Can update Double-value" {
-        $global:AccountId | Set-XrmAccount -Latitude 2.0
+        $global:AccountId | Set-XrmAccount -Latitude 22.0
         $global:AccountRecord = Get-XrmAccount -AccountId $global:AccountId
-        $global:AccountRecord.address1_latitude_Property.Value | Should Be 2.00
+        $global:AccountRecord.address1_latitude_Property.Value | Should Be 22.00
     }
 
     It "Can update Money-value" {
@@ -172,7 +172,7 @@ Describe "Test function genereration and use against CRM instance" {
     }
 
     It "Can query Double-value" {
-        $Accounts = Get-XrmAccount -Latitude 2.0
+        $Accounts = Get-XrmAccount -Latitude 22.0 -Fields "name"
         $Accounts.accountid -contains $global:AccountId | Should Be $true
     }
 
@@ -182,17 +182,17 @@ Describe "Test function genereration and use against CRM instance" {
     }
 
     It "Can query Money-value" {
-        $Accounts = Get-XrmAccount -CreditLimit 40000
+        $Accounts = Get-XrmAccount -CreditLimit 40000 -Fields "name"
         $Accounts.accountid -contains $global:AccountId | Should Be $true
     }
 
     It "Can query Integer-value" {
-        $Accounts = Get-XrmAccount -UtcOffset 2
+        $Accounts = Get-XrmAccount -UtcOffset 2 -Fields "name"
         $Accounts.accountid -contains $global:AccountId | Should Be $true
     }
 
     It "Can query Boolean-value" {
-        $Accounts = Get-XrmAccount -DoNotEmailValue $true
+        $Accounts = Get-XrmAccount -DoNotEmailValue $true -Fields "name"
         $Accounts.accountid -contains $global:AccountId | Should Be $true
     }
 
@@ -215,7 +215,7 @@ Describe "Test function genereration and use against CRM instance" {
     }
 
     It "Can query multiple fields" {
-        $Accounts = Get-XrmAccount -CreditLimit 40000 -Created ([DateTime]::Today) -Latitude 2.0 -ParentAccountId $global:ParentAccountId -CustomerType Customer
+        $Accounts = Get-XrmAccount -CreditLimit 40000 -Created ([DateTime]::Today) -Latitude 22.0 -ParentAccountId $global:ParentAccountId -CustomerType Customer
         $Accounts.accountid -contains $global:AccountId | Should Be $true
     }
 

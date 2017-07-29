@@ -6,28 +6,11 @@ foreach ($attribute in $Attributes | Where-Object { "Picklist","Boolean" -contai
 
 foreach ($attribute in $Attributes){
 
-    switch ($attribute.AttributeType){
-
-        "Picklist"{
-           Invoke-Template -Template $PicklistAdderTemplate -TemplateModel $attribute | Add-Indentation -Step 2
-        }
-
-        "Boolean" {
-            Invoke-Template -Template $BooleanAdderTemplate -TemplateModel $attribute | Add-Indentation -Step 2
-        }
-
-        "Money"{
-            Invoke-Template -Template $MoneyAdderTemplate -TemplateModel $attribute | Add-Indentation -Step 2
-        }
-
-        "lookup" {
-            Invoke-Template -Template $LookupAdderTemplate -TemplateModel $attribute | Add-Indentation -Step 2
-        }
-
-        default {
-            Invoke-Template -Template $DefaultAdderTemplate -TemplateModel $attribute | Add-Indentation -Step 2
-        }
-            
+    $AdderTemplate = Get-Variable -Name "$($Attribute.AttributeType)AdderTemplate" -ValueOnly -ErrorAction SilentlyContinue
+    if ($AdderTemplate -eq $null){
+        $AdderTemplate = $DefaultAdderTemplate
     }
+
+    Invoke-Template -Template $AdderTemplate -TemplateModel $attribute | Add-Indentation -Step 2
     "`n"
 }

@@ -4,9 +4,22 @@ $Pos = 1
 $Padding = "`t`t"
 
 foreach ($attribute in $Attributes){
-    
-    switch ($attribute.AttributeType){
+    $ParameterTemplate = Get-Variable -Name "$($Attribute.AttributeType)ParameterTemplate" -ValueOnly -ErrorAction SilentlyContinue
+    if ($ParameterTemplate -eq $null){
+        $ParameterTemplate = $DefaultParameterTemplate
+    }
 
+    if ($TemplateType -eq "Get" -and $attribute.AttributeType -eq "Lookup") {
+        Invoke-Template -Template $LookupParameterTemplateGet -TemplateModel $attribute  | Add-Indentation -Steps 2
+        "`n`n "
+        $Pos++
+    }
+
+    Invoke-Template -Template $ParameterTemplate -TemplateModel $attribute | Add-Indentation -Steps 2
+
+    <#switch ($attribute.AttributeType){
+
+       
         default {
             
                 Invoke-Template -Template $DefaultParameterTemplate -TemplateModel $attribute | Add-Indentation -Steps 2
@@ -39,7 +52,7 @@ foreach ($attribute in $Attributes){
             
            
         }
-    }
+    }#>
     "`n`n "
     $Pos++
 }
