@@ -4,6 +4,8 @@ if ($conn -eq $null){
 }
 Describe "Test function genereration and use against CRM instance" {
 
+    Import-Module ..\XrmFunctionGenerator\XrmFunctionGenerator.psd1
+
     Context "Testing using Account" {
         $Attributes = [PSCustomObject]@{
         "SchemaName" = "name"
@@ -158,6 +160,12 @@ Describe "Test function genereration and use against CRM instance" {
     }
 
     It "Can update DateTime-value" {
+
+    }
+
+    It "Can get all records" {
+        $Accounts = Get-XrmAccount -Fields "accountid"
+        $Accounts.Count -gt 0 | Should Be $True
 
     }
 

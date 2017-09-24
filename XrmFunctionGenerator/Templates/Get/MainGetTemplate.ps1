@@ -38,10 +38,14 @@ $(
 $(
             . "$ModuleRootDir\Templates\Get\FilteringLogic.ps1"
         )
-
-        `$FetchXml = Get-FetchXml -EntityLogicalName $EntityLogicalName -Conditions `$conditions -Fields `$Fields
-
-        (Get-CrmRecordsByFetch -Fetch `$FetchXml -AllRows).CrmRecords
+        
+        if (`$conditions.Count -gt 0){
+            `$FetchXml = Get-FetchXml -EntityLogicalName $EntityLogicalName -Conditions `$conditions -Fields `$Fields
+            (Get-CrmRecordsByFetch -Fetch `$FetchXml -AllRows).CrmRecords
+        }
+        else{
+            (Get-CrmRecords -EntityLogicalName $EntityLogicalName -Fields `$Fields).CrmRecords
+        }
     }
     
 }
